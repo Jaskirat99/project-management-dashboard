@@ -11,6 +11,7 @@ public class App {
         runApp();
     }
 
+    // EFFECTS: Manages Main Loop
     private void runApp() {
         String userInput = "temporary";
         boolean keepGoing = true;
@@ -31,7 +32,7 @@ public class App {
         System.out.println("See you next time!");
     }
 
-    // MODIFIES: this
+
     // EFFECTS: initializes the app to defaults
     private void initializeApp() {
 
@@ -48,17 +49,20 @@ public class App {
                             "4 - View Tax Information",
                             "5 - See Project Summaries",
                             "6 - Set Targets",
+                            "7 - Amend A Transaction",
                             "X - Help",
                             "Y - Quit Application"};
 
         int numOptions = options.length;
 
-        for (int i = 0; i < numOptions; i++) {
-            System.out.println(options[i]);
+        for (String option : options) {
+            System.out.println(option);
         }
         System.out.print("\nEnter Input Here:");
     }
 
+    // REQUIRES: None empty input
+    // EFFECTS: Calls Appropriate methods based on input
     private void runCommand(String command) {
         switch (command) {
             case "1": createNewProject();
@@ -72,13 +76,19 @@ public class App {
             case "5": displayProjectSummary();
             break;
             case "6": setTargets();
-            case "x": displayHelpMenu();
             break;
-            case "X": displayHelpMenu();
+            case "7": amendTransaction();
             break;
+            case "x":
+            case "X":
+                displayHelpMenu();
+                break;
             default: runCommand(handleInvalidInput());
         }
 
+    }
+
+    private void amendTransaction() {
     }
 
     // EFFECTS: Informs user of invalid inputs and starts over
