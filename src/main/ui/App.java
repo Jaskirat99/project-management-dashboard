@@ -4,7 +4,6 @@ import model.*;
 import java.util.*;
 import static model.Utilities.*;
 
-
 public class App {
     private Scanner input = new Scanner(System.in);
     List<Project> projects = new ArrayList<>();
@@ -92,6 +91,58 @@ public class App {
     }
 
     private void amendTransaction() {
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Alright! Which project would you like to amend a target for?");
+            int choice = displayProjects();
+            System.out.println("Perfect! Please select a transaction from the below list "
+                    + projects.get(choice).getAddress());
+            printTransactions(choice);
+            int transactionChoice = (Integer.parseInt(input.next())) - 1;
+            System.out.println("What aspect of the transaction would you like to change?\n1.Payee\n2.Amount\n3.Date"
+                    + "\n4.Payment Type\n5.Tax Included\n6.Tax Type\n7.Project");
+            int transactionAspect = Integer.parseInt(input.next());
+            displayAmendOptions(transactionAspect, transactionChoice, choice);
+
+        }
+
+    }
+
+    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
+    private void displayAmendOptions(int transactionAspect, int transactionChoice, int choice) {
+        switch (transactionAspect) {
+            case 1: System.out.println("What is the new payee?");
+                projects.get(choice).getTransaction(transactionChoice).setPayee(input.next());
+                System.out.println("Okay, I've set the payee to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getPayee());
+                break;
+            case 2: System.out.println("What is the new amount?");
+                projects.get(choice).getTransaction(transactionChoice).setAmount(Integer.parseInt(input.next()));
+                System.out.println("Okay, I've set the amount to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getAmount());
+                break;
+            case 3:System.out.println("What is the new date (Enter 'today' or 8 digits formed as DDMMYYYY)?");
+                projects.get(choice).getTransaction(transactionChoice).setDate(input.next());
+                System.out.println("Okay, I've set the date to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getDate());
+                break;
+            case 4:System.out.println("What is the new Payment Type?");
+                projects.get(choice).getTransaction(transactionChoice).setPaymentType(input.next());
+                System.out.println("Okay, I've set the Payment Type to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getPaymentType());
+                break;
+            case 5:System.out.println("Was Tax included?");
+                projects.get(choice).getTransaction(transactionChoice).setTaxPaid(Boolean.valueOf(input.next()));
+                System.out.println("Okay, I've set the tax included state to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getTaxPaid());
+                break;
+            case 6:System.out.println("What is the new tax type (GST/PST/BOTH)?");
+                projects.get(choice).getTransaction(transactionChoice).setTaxType(input.next());
+                System.out.println("Okay, I've set the tax type to be "
+                        + projects.get(choice).getTransaction(transactionChoice).getTaxType());
+                break;
+            default: handleInvalidInput();
+        }
     }
 
     // EFFECTS: Informs user of invalid inputs and starts over
@@ -129,31 +180,97 @@ public class App {
     }
 
     private void setTargets() {
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Alright! Which project would you like to set a target for?");
+            int choice = displayProjects();
+            System.out.println("Perfect! How much are you expecting to sell project "
+                    + projects.get(choice).getAddress() + " for? \nEnter a number below:");
+            double amount = Double.parseDouble(input.next());
+            projects.get(choice).setTargetSale(amount);
+            System.out.println("Okay! I've set the target price for " + projects.get(choice).getAddress()
+                    + " to be " + formatNumbers(projects.get(choice).getTargetSale()));
+            loopControl = displayEndScreen("Set another target");
+        }
     }
 
     private void displayTaxInfo() {
     }
 
+    // EFFECTS: Prompts user to create new transaction
     private void addNewTransaction() {
         System.out.println("Alright! Let's get started! \nWho is the payee of this transaction?: ");
         String payee = input.next();
         System.out.println("What is the amount of the transaction?");
+        double amount = 0;
         try {
-            String amount = formatNumbers(Double.parseDouble(input.next()));
+            amount = Double.parseDouble(input.next());
         } catch (Exception e) {
             handleInvalidInput();
         }
         System.out.println("What is the purchase type (cheque, cash or visa)?");
-        String purchaseType = formatNumbers(Double.parseDouble(input.next()));
+        String purchaseType = input.next();
         System.out.println("When was the transaction made (Enter 'today' or a 8 digit number formed as DDMMYYYY)?");
         String date = input.next();
+        System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no'?");
+        String temp = input.next();
+        Boolean taxIncluded = formatTaxIncluded(temp);
+        System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
+        String taxType = input.next();
+        checkInvalidTaxType(taxType);
+
+        System.out.println("Lastly, what project is this transaction for?");
+        int choice = displayProjects();
+        projects.get(choice).createEntry(payee,date,purchaseType,taxIncluded,taxType,amount);
+        displayEndScreen("Create another transaction");
 
 
+
+    }
+
+    private void checkInvalidTaxType(String taxType) {
+        if ((Objects.equals("GST", taxType))
+                || (Objects.equals("PST", taxType))
+                || (Objects.equals("BOTH", taxType))) {
+            int temp;
+        } else {
+            handleInvalidInput();
+        }
+    }
+
+    private boolean formatTaxIncluded(String temp) {
+        if (Objects.equals("yes", temp)) {
+            return true;
+        } else if (Objects.equals("no", temp)) {
+            return false;
+        } else {
+            handleInvalidInput();
+        }
+        return false;
     }
 
     // EFFECTS: Displays transactions for selected project or prompts you to create a project
     private void displayTransactions() {
         System.out.println("Which project would you like to view transactions for? ");
+        int choice = displayProjects();;
+        System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
+        printTransactions(choice);
+        displayEndScreen("View the transactions again");
+
+    }
+
+    // EFFECTS: Print all transactions for an existing project
+    private void printTransactions(int project) {
+        int counter = 1;
+        for (int i = 0; i < projects.get(project).formatTransactions().size(); i++) {
+            System.out.println(counter + projects.get(project).formatTransactions().get(i));
+            counter++;
+        }
+    }
+
+    // EFFECTS: Displays all project addresses already created, if none exist then calls helper to handle case.
+    // Returns which project user chose
+    private int displayProjects() {
         if (projects.size() == 0) {
             handleEmptyProjects();
         } else {
@@ -162,12 +279,8 @@ public class App {
             }
         }
         int choice = Integer.parseInt(input.next()) - 1;
-        System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
 
-        for (int i = 0; i < projects.get(choice).formatTransactions().size(); i++) {
-            System.out.println(projects.get(choice).formatTransactions().get(i));
-        }
-
+        return choice;
     }
 
     // EFFECTS: Prompts user to increase create new project
@@ -199,6 +312,9 @@ public class App {
         }
     }
 
+    // REQUIRES: option1 is not empty
+    // EFFECTS: Displays the end screen that is displayed after every operation is done. Option 1 text varies so is
+    // supplied by the calling method.
     private int displayEndScreen(String option1) {
         System.out.println("Would you like to \n 1. " + option1 + " \n 2. View the main menu \n 3. Quit");
         int option = Integer.parseInt(input.next());

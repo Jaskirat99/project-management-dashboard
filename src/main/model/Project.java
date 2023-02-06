@@ -62,6 +62,7 @@ public class Project {
         return formattedTransactions;
     }
 
+
     public String getAddress() {
         return address;
     }
@@ -80,5 +81,9 @@ public class Project {
 
     public double getTotalCost() {
         return totalCost;
+    }
+
+    public Entry getTransaction(int number) {
+        return transactions.get(number);
     }
 }
