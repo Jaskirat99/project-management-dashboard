@@ -5,7 +5,7 @@ import java.util.*;
 import static model.Utilities.*;
 
 public class App {
-    private Scanner input = new Scanner(System.in);
+    private Scanner input = new Scanner(System.in).useDelimiter("\\n");
     List<Project> projects = new ArrayList<>();
 
     //EFFECTS: runs the application
@@ -15,16 +15,14 @@ public class App {
 
     // EFFECTS: Manages Main Loop
     private void runApp() {
-        String userInput = "temporary";
+        String userInput;
         boolean keepGoing = true;
-
-        initializeApp();
 
         while (keepGoing) {
             printMenu();
             userInput = input.next();
 
-            if ((userInput.equals("y")) || (userInput.equals("Y"))) {
+            if ((userInput.equalsIgnoreCase("y"))) {
                 keepGoing = false;
             } else {
                 runCommand(userInput);
@@ -35,10 +33,6 @@ public class App {
     }
 
 
-    // EFFECTS: initializes the app to defaults
-    private void initializeApp() {
-
-    }
 
     // EFFECTS: displays the menu of options
     private void printMenu() {
@@ -54,8 +48,6 @@ public class App {
                             "7 - Amend A Transaction",
                             "X - Help",
                             "Y - Quit Application"};
-
-        int numOptions = options.length;
 
         for (String option : options) {
             System.out.println(option);
@@ -93,7 +85,7 @@ public class App {
     private void amendTransaction() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Which project would you like to amend a target for?");
+            System.out.println("Alright! Which project would you like to amend a transaction for?");
             int choice = displayProjects();
             System.out.println("Perfect! Please select a transaction from the below list "
                     + projects.get(choice).getAddress());
@@ -103,6 +95,7 @@ public class App {
                     + "\n4.Payment Type\n5.Tax Included\n6.Tax Type\n7.Project");
             int transactionAspect = Integer.parseInt(input.next());
             displayAmendOptions(transactionAspect, transactionChoice, choice);
+            loopControl = displayEndScreen("Amend Another Transaction");
 
         }
 
@@ -174,9 +167,38 @@ public class App {
     }
 
     private void displayHelpMenu() {
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Welcome to the help menu!\nBelow is a description of what each menu option does:");
+            System.out.println("1. Creates a project with your supplied address\n2. Lists all the transactions "
+                    + "for a project of your choosing\n3. Allows you to create a new transaction for a project"
+                    + "\n4. Displays tax information about a project\n5. Displays a summary for a project's progress"
+                    + "\n6. Allows you to set a target for a project.\n7. Allows you to fix an error for any project.");
+            loopControl = displayEndScreen("View Help Again");
+        }
     }
 
+    // TODO add cost breakdown
     private void displayProjectSummary() {
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Alright! Which project would you like to see a summary for?");
+            int choice = displayProjects();
+            System.out.println("Perfect! Here are the details you requested");
+            System.out.println("Project address: " + projects.get(choice).getAddress());
+            System.out.println("Number of Transactions: " + projects.get(choice).getAllTransactions().size());
+            System.out.println("Project Target: " + projects.get(choice).getTargetSale());
+            System.out.println("Project Cost So Far: " + projects.get(choice).getTotalCost());
+            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
+                System.out.println("You are over budget by "
+                        + (projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
+                        + "!!!!");
+            } else {
+                System.out.println("You are on track!! Your budget still allows for another "
+                        + (projects.get(choice).getTargetSale() - projects.get(choice).getTotalCost()));
+            }
+            loopControl = displayEndScreen("View Another Project Summary");
+        }
     }
 
     private void setTargets() {
@@ -195,37 +217,46 @@ public class App {
     }
 
     private void displayTaxInfo() {
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Alright! Which project would you like to see tax information for?");
+            int choice = displayProjects();
+            System.out.println("Perfect! The tax details for " + projects.get(choice).getAddress() + " are:");
+            System.out.println("Total Tax Paid: " + formatNumbers(projects.get(choice).calculateTotalTax()));
+            System.out.println("Total GST Paid: " + formatNumbers(projects.get(choice).calculateCertainTax(1)));
+            System.out.println("Total PST Paid: " + formatNumbers(projects.get(choice).calculateCertainTax(2)));
+            loopControl = displayEndScreen("View more tax information");
+        }
     }
 
     // EFFECTS: Prompts user to create new transaction
     private void addNewTransaction() {
-        System.out.println("Alright! Let's get started! \nWho is the payee of this transaction?: ");
-        String payee = input.next();
-        System.out.println("What is the amount of the transaction?");
-        double amount = 0;
-        try {
-            amount = Double.parseDouble(input.next());
-        } catch (Exception e) {
-            handleInvalidInput();
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Alright! Let's get started! \nWho is the payee of this transaction?: ");
+            String payee = input.next();
+            System.out.println("What is the amount of the transaction?");
+            double amount = 0;
+            try {
+                amount = Double.parseDouble(input.next());
+            } catch (Exception e) {
+                handleInvalidInput();
+            }
+            System.out.println("What is the purchase type (cheque, cash or visa)?");
+            String purchaseType = input.next();
+            System.out.println("The transaction will be dated to today's date");
+            System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no'?");
+            String temp = input.next();
+            Boolean taxIncluded = formatTaxIncluded(temp);
+            System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
+            String taxType = input.next();
+            checkInvalidTaxType(taxType);
+
+            System.out.println("Lastly, what project is this transaction for?");
+            int choice = displayProjects();
+            projects.get(choice).createEntry(payee,purchaseType,taxIncluded,taxType,amount);
+            loopControl = displayEndScreen("Create another transaction");
         }
-        System.out.println("What is the purchase type (cheque, cash or visa)?");
-        String purchaseType = input.next();
-        System.out.println("When was the transaction made (Enter 'today' or a 8 digit number formed as DDMMYYYY)?");
-        String date = input.next();
-        System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no'?");
-        String temp = input.next();
-        Boolean taxIncluded = formatTaxIncluded(temp);
-        System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
-        String taxType = input.next();
-        checkInvalidTaxType(taxType);
-
-        System.out.println("Lastly, what project is this transaction for?");
-        int choice = displayProjects();
-        projects.get(choice).createEntry(payee,date,purchaseType,taxIncluded,taxType,amount);
-        displayEndScreen("Create another transaction");
-
-
-
     }
 
     private void checkInvalidTaxType(String taxType) {
@@ -251,11 +282,14 @@ public class App {
 
     // EFFECTS: Displays transactions for selected project or prompts you to create a project
     private void displayTransactions() {
-        System.out.println("Which project would you like to view transactions for? ");
-        int choice = displayProjects();;
-        System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
-        printTransactions(choice);
-        displayEndScreen("View the transactions again");
+        int loopControl = 0;
+        while (loopControl != 1) {
+            System.out.println("Which project would you like to view transactions for? ");
+            int choice = displayProjects();
+            System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
+            printTransactions(choice);
+            loopControl = displayEndScreen("View the transactions again");
+        }
 
     }
 
@@ -263,7 +297,7 @@ public class App {
     private void printTransactions(int project) {
         int counter = 1;
         for (int i = 0; i < projects.get(project).formatTransactions().size(); i++) {
-            System.out.println(counter + projects.get(project).formatTransactions().get(i));
+            System.out.println(counter + ". " + projects.get(project).formatTransactions().get(i));
             counter++;
         }
     }
@@ -316,6 +350,7 @@ public class App {
     // EFFECTS: Displays the end screen that is displayed after every operation is done. Option 1 text varies so is
     // supplied by the calling method.
     private int displayEndScreen(String option1) {
+        System.out.println("----------------------------------------------------------------------------");
         System.out.println("Would you like to \n 1. " + option1 + " \n 2. View the main menu \n 3. Quit");
         int option = Integer.parseInt(input.next());
         if (option == 1) {

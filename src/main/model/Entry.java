@@ -1,11 +1,10 @@
 package model;
 
 
-import static model.Utilities.*;
-
 // Represents an individual transaction storing ID, project, payee, amount, date, payment type, tax paid
 public class Entry {
 
+    Date dateStarter = new Date();
     private String payee;
     private String date;
     private String paymentType;
@@ -17,10 +16,10 @@ public class Entry {
 
     // REQUIRES: All args are not empty, amount > 0
     // EFFECTS: Initializes all fields with given arguments
-    public Entry(String payee, String date, String paymentType, Boolean taxPaid, String taxType, double amount,
+    public Entry(String payee, String paymentType, Boolean taxPaid, String taxType, double amount,
                  String project) {
         this.payee = payee;
-        this.date = date;
+        this.date = dateStarter.getFormattedDate();
         this.paymentType = paymentType;
         this.taxPaid = taxPaid;
         this.taxType = taxType;
@@ -30,24 +29,24 @@ public class Entry {
 
     // REQUIRES: if tax paid == true, tax type can not be none
     // EFFECTS: Returns amount of tax that was paid on amount
-    public String calculateTax() {
+    public double calculateTax() {
         if (taxPaid) {
             if (taxType == "GST") {
-                return formatNumbers((amount - (amount / 1.05)));
+                return ((amount - (amount / 1.05)));
             } else if (taxType == "PST") {
-                return formatNumbers(amount - (amount / 1.07));
+                return (amount - (amount / 1.07));
             } else {
-                return formatNumbers(amount - (amount / 1.12));
+                return (amount - (amount / 1.12));
             }
         } else {
             if (taxType == "GST") {
-                return formatNumbers(amount * 0.05);
+                return (amount * 0.05);
             } else if (taxType == "PST") {
-                return formatNumbers(amount * 0.07);
+                return (amount * 0.07);
             } else if (taxType == "BOTH") {
-                return formatNumbers(amount * 0.12);
+                return (amount * 0.12);
             } else {
-                return formatNumbers(0);
+                return (0);
             }
         }
     }

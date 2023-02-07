@@ -29,7 +29,6 @@ to use
 - As a user, I want to be able to see my cost breakdown on what was spent in cash,cheque or credit card
 - As a user, I want to be able to store an expected sale price for any project.
 - As a user, I want to be able to see an expected profit figure on any project
-- As a user, I want to be able to see how much tax I would owe on the expected profit figure
 - As a user, I want to be able to see how much of my cost went towards taxes (GST/PST)
 
  

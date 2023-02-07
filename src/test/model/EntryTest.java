@@ -16,19 +16,19 @@ class EntryTest {
 
     @BeforeEach
     public void setup() {
-    c1 = new Entry("payee1", "date1", "cash", true, "GST", 100,
+    c1 = new Entry("payee1", "cash", true, "GST", 100,
             "project1" );
-    c2 = new Entry("payee2", "date2", "visa", true, "PST", 200,
+    c2 = new Entry("payee2", "visa", true, "PST", 200,
             "project2" );
-    c3 = new Entry("payee3", "date3", "cheque", true, "BOTH", 300,
+    c3 = new Entry("payee3",  "cheque", true, "BOTH", 300,
             "project3" );
-    c4 = new Entry("payee4", "date4", "cash", false, "GST", 400,
+    c4 = new Entry("payee4", "cash", false, "GST", 400,
             "project1" );
-    c5 = new Entry("payee5", "date5", "visa", false, "PST", 500,
+    c5 = new Entry("payee5",  "visa", false, "PST", 500,
             "project1" );
-    c6 = new Entry("payee6", "date6", "cheque", false, "BOTH", 600,
+    c6 = new Entry("payee6",  "cheque", false, "BOTH", 600,
             "project6" );
-    c7 = new Entry("payee7", "date7", "cheque", false, "NONE", 700,
+    c7 = new Entry("payee7",  "cheque", false, "NONE", 700,
             "project7" );
 }
 
@@ -36,9 +36,9 @@ class EntryTest {
     public void entryTest() {
     assertEquals("payee1", c1.getPayee());
     assertEquals("payee2", c2.getPayee());
-    assertEquals("date3", c3.getDate());
-    assertEquals("date4", c4.getDate());
-    assertEquals("date5", c5.getDate());
+    assertEquals("07/02/2023", c3.getDate());
+    assertEquals("07/02/2023", c4.getDate());
+    assertEquals("07/02/2023", c5.getDate());
     assertEquals("cash", c4.getPaymentType());
     assertEquals("visa", c5.getPaymentType());
     assertEquals("cheque", c3.getPaymentType());
@@ -56,12 +56,12 @@ class EntryTest {
 }
     @Test
     public void testCalculateTax() {
-    assertEquals("$4.76", c1.calculateTax());
-    assertEquals("$13.08", c2.calculateTax());
-    assertEquals("$32.14", c3.calculateTax());
-    assertEquals("$20.00", c4.calculateTax());
-    assertEquals("$35.00", c5.calculateTax());
-    assertEquals("$72.00", c6.calculateTax());
-    assertEquals("$0.00", c7.calculateTax());
+    assertEquals(4.761904761904759, c1.calculateTax());
+    assertEquals(13.084112149532729, c2.calculateTax());
+    assertEquals(32.14285714285717, c3.calculateTax());
+    assertEquals(20.0, c4.calculateTax());
+    assertEquals(35.0, c5.calculateTax());
+    assertEquals(72.0, c6.calculateTax());
+    assertEquals(0, c7.calculateTax());
 }
 }

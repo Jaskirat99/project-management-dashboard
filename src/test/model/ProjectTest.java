@@ -13,7 +13,10 @@ public class ProjectTest {
     public void setup() {
         p1 = new Project("123 Street");
         p2 = new Project("456 Street");
-
+        p1.createEntry("payee1",  "cash", true, "GST", 100);
+        p1.createEntry("payee2",  "visa", true, "PST", 200);
+        p2.createEntry("payee3",  "cheque", true, "BOTH", 300);
+        p2.createEntry("payee4",  "cash", false, "GST", 400);
    }
 
    @Test
@@ -24,10 +27,7 @@ public class ProjectTest {
 
    @Test
     public void createEntryTest() {
-        p1.createEntry("payee1", "date1", "cash", true, "GST", 100);
-        p1.createEntry("payee2", "date2", "visa", true, "PST", 200);
-        p2.createEntry("payee3", "date3", "cheque", true, "BOTH", 300);
-        p2.createEntry("payee4", "date4", "cash", false, "GST", 400);
+
 
         assertEquals(0,p1.transactions.get(0).getId());
         assertEquals(1,p1.transactions.get(1).getId());
@@ -37,11 +37,8 @@ public class ProjectTest {
    }
 
    @Test
-    public void calculateTotalCost() {
-       p1.createEntry("payee1", "date1", "cash", true, "GST", 100);
-       p1.createEntry("payee2", "date2", "visa", true, "PST", 200);
-       p2.createEntry("payee3", "date3", "cheque", true, "BOTH", 300);
-       p2.createEntry("payee4", "date4", "cash", false, "GST", 400);
+    public void calculateTotalCostTest() {
+
 
        assertEquals(300, p1.getTotalCost());
        assertEquals(700, p2.getTotalCost());
@@ -49,15 +46,33 @@ public class ProjectTest {
 
    }
 
+    @Test
+    public void calculateTotalTaxTest() {
+
+
+        assertEquals(17.846016911437488, p1.calculateTotalTax());
+        assertEquals(52.14285714285717, p2.calculateTotalTax());
+
+
+    }
+
+    @Test
+    public void calculateCertainTaxTest() {
+
+
+        assertEquals(15.0, p1.calculateCertainTax(2));
+        assertEquals(21.0, p2.calculateCertainTax(1));
+
+
+    }
+
    @Test
     public void formatTransactionsTest(){
-       p1.createEntry("payee1", "date1", "cash", true, "GST", 100);
-       p2.createEntry("payee4", "date4", "cash", false, "GST", 400);
-       p2.createEntry("payee3", "date3", "cheque", true, "BOTH", 300);
 
-       assertEquals("Payee: payee1 Date: date1 Amount: $100.00 Payment Type: cash Tax Included: true " +
+
+       assertEquals("Payee: payee1 Date: 07/02/2023 Amount: $100.00 Payment Type: cash Tax Included: true " +
                "Taxes Applied: GST Project: 123 Street", p1.formatTransactions().get(0));
-       assertEquals("Payee: payee3 Date: date3 Amount: $300.00 Payment Type: cheque Tax Included: true " +
-               "Taxes Applied: BOTH Project: 456 Street", p2.formatTransactions().get(1));
+       assertEquals("Payee: payee4 Date: 07/02/2023 Amount: $400.00 Payment Type: cash Tax Included: false " +
+               "Taxes Applied: GST Project: 456 Street", p2.formatTransactions().get(1));
    }
 }
