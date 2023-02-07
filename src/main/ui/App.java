@@ -13,7 +13,7 @@ public class App {
         runApp();
     }
 
-    // EFFECTS: Manages Main Loop
+    // EFFECTS: Manages Main Loop, terminating app when "quit" input is given
     private void runApp() {
         String userInput;
         boolean keepGoing = true;
@@ -82,6 +82,7 @@ public class App {
 
     }
 
+    // EFFECTS: prompts user to pick a specific project -> entry -> field of entry to amend and fix
     private void amendTransaction() {
         int loopControl = 0;
         while (loopControl != 1) {
@@ -91,8 +92,8 @@ public class App {
                     + projects.get(choice).getAddress());
             printTransactions(choice);
             int transactionChoice = (Integer.parseInt(input.next())) - 1;
-            System.out.println("What aspect of the transaction would you like to change?\n1.Payee\n2.Amount\n3.Date"
-                    + "\n4.Payment Type\n5.Tax Included\n6.Tax Type\n7.Project");
+            System.out.println("What aspect of the transaction would you like to change?\n1.Payee\n2.Amount"
+                    + "\n3.Payment Type\n4.Tax Included\n5.Tax Type\n6.Project");
             int transactionAspect = Integer.parseInt(input.next());
             displayAmendOptions(transactionAspect, transactionChoice, choice);
             loopControl = displayEndScreen("Amend Another Transaction");
@@ -114,22 +115,17 @@ public class App {
                 System.out.println("Okay, I've set the amount to be "
                         + projects.get(choice).getTransaction(transactionChoice).getAmount());
                 break;
-            case 3:System.out.println("What is the new date (Enter 'today' or 8 digits formed as DDMMYYYY)?");
-                projects.get(choice).getTransaction(transactionChoice).setDate(input.next());
-                System.out.println("Okay, I've set the date to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getDate());
-                break;
-            case 4:System.out.println("What is the new Payment Type?");
+            case 3:System.out.println("What is the new Payment Type?");
                 projects.get(choice).getTransaction(transactionChoice).setPaymentType(input.next());
                 System.out.println("Okay, I've set the Payment Type to be "
                         + projects.get(choice).getTransaction(transactionChoice).getPaymentType());
                 break;
-            case 5:System.out.println("Was Tax included?");
+            case 4:System.out.println("Was Tax included?");
                 projects.get(choice).getTransaction(transactionChoice).setTaxPaid(Boolean.valueOf(input.next()));
                 System.out.println("Okay, I've set the tax included state to be "
                         + projects.get(choice).getTransaction(transactionChoice).getTaxPaid());
                 break;
-            case 6:System.out.println("What is the new tax type (GST/PST/BOTH)?");
+            case 5:System.out.println("What is the new tax type (GST/PST/BOTH)?");
                 projects.get(choice).getTransaction(transactionChoice).setTaxType(input.next());
                 System.out.println("Okay, I've set the tax type to be "
                         + projects.get(choice).getTransaction(transactionChoice).getTaxType());
@@ -229,6 +225,7 @@ public class App {
         }
     }
 
+    @SuppressWarnings("methodlength")
     // EFFECTS: Prompts user to create new transaction
     private void addNewTransaction() {
         int loopControl = 0;
