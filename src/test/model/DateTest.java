@@ -19,8 +19,9 @@ public class DateTest {
 
     @Test
     public void dateTest(){
-        assertEquals("07/02/2023",date1.getFormattedDate());
-        assertEquals("07/02/2023",date2.getFormattedDate());
+
+        assertEquals("08/02/2023",date1.getFormattedDate());
+        assertEquals("08/02/2023",date2.getFormattedDate());
     }
 
 

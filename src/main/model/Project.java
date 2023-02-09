@@ -45,6 +45,7 @@ public class Project {
 
     }
 
+    // EFFECTS: Computes total tax for all transactions in project
     public double calculateTotalTax() {
         double sum = 0;
         for (int i = 0; i < transactionID; i++) {
@@ -53,21 +54,59 @@ public class Project {
         return sum;
     }
 
-    //TODO fix this!!
-    public double calculateCertainTax(int num) {
 
+    // REQUIRES: num is 1 or 2
+    // EFFECTS: Computes a breakdown of different tax types
+    public double calculateCertainTax(int num) {
+        double amount = 0;
         for (int i = 0; i < transactionID; i++) {
             if (num == 1) {
-                if (Objects.equals("GST", transactions.get(i).getTaxType())) {
-                    num += transactions.get(i).calculateTax();
+                for (i = 0; i < transactions.size(); i++) {
+                    if (Objects.equals("gst", transactions.get(i).getTaxType().toLowerCase())) {
+                        amount += transactions.get(i).calculateTax();
+                    } else if (Objects.equals("both", transactions.get(i).getTaxType().toLowerCase())) {
+                        amount += (transactions.get(i).calculateTax()) * 5 / 12;
+                    }
                 }
             } else {
-                if (Objects.equals("PST", transactions.get(i).getTaxType())) {
-                    num += transactions.get(i).calculateTax();
+                for (i = 0; i < transactions.size(); i++) {
+                    if (Objects.equals("pst", transactions.get(i).getTaxType().toLowerCase())) {
+                        amount += transactions.get(i).calculateTax();
+                    } else if (Objects.equals("both", transactions.get(i).getTaxType().toLowerCase())) {
+                        amount += (transactions.get(i).calculateTax()) * 7 / 12;
+                    }
                 }
             }
         }
-        return num;
+        return amount;
+    }
+
+    // REQUIRES: num is 1 or 2 or 3
+    // EFFECTS: Computes total cost for specific types of purchases
+    public double calculateCostBreakdown(int num) {
+        double amount = 0;
+        for (int i = 0; i < transactionID; i++) {
+            if (num == 1) {
+                for (i = 0; i < transactions.size(); i++) {
+                    if (Objects.equals("cash", transactions.get(i).getPaymentType().toLowerCase())) {
+                        amount += transactions.get(i).getAmount();
+                    }
+                }
+            } else if (num == 2) {
+                for (i = 0; i < transactions.size(); i++) {
+                    if (Objects.equals("cheque", transactions.get(i).getPaymentType().toLowerCase())) {
+                        amount += transactions.get(i).getAmount();
+                    }
+                }
+            } else if (num == 3) {
+                for (i = 0; i < transactions.size(); i++) {
+                    if (Objects.equals("visa", transactions.get(i).getPaymentType().toLowerCase())) {
+                        amount += transactions.get(i).getAmount();
+                    }
+                }
+            }
+        }
+        return amount;
     }
 
     // EFFECTS: Returns transactions array in easy to see format
@@ -78,9 +117,9 @@ public class Project {
             String formattedEntry = "Payee: " + transaction.getPayee()
                     + " Date: " + transaction.getDate()
                     + " Amount: " + formatNumbers(transaction.getAmount())
-                    + " Payment Type: " + transaction.getPaymentType()
+                    + " Payment Type: " + transaction.getPaymentType().toUpperCase()
                     + " Tax Included: " + transaction.getTaxPaid()
-                    + " Taxes Applied: " + transaction.getTaxType()
+                    + " Taxes Applied: " + transaction.getTaxType().toUpperCase()
                     + " Project: " + transaction.getProject();
 
             formattedTransactions.add(formattedEntry);
@@ -94,9 +133,6 @@ public class Project {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public double getTargetSale() {
         return targetSale;

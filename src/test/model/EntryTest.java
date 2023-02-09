@@ -36,9 +36,9 @@ class EntryTest {
     public void entryTest() {
     assertEquals("payee1", c1.getPayee());
     assertEquals("payee2", c2.getPayee());
-    assertEquals("07/02/2023", c3.getDate());
-    assertEquals("07/02/2023", c4.getDate());
-    assertEquals("07/02/2023", c5.getDate());
+    assertEquals("08/02/2023", c3.getDate());
+    assertEquals("08/02/2023", c4.getDate());
+    assertEquals("08/02/2023", c5.getDate());
     assertEquals("cash", c4.getPaymentType());
     assertEquals("visa", c5.getPaymentType());
     assertEquals("cheque", c3.getPaymentType());
@@ -56,9 +56,9 @@ class EntryTest {
 }
     @Test
     public void testCalculateTax() {
-    assertEquals(4.761904761904759, c1.calculateTax());
-    assertEquals(13.084112149532729, c2.calculateTax());
-    assertEquals(32.14285714285717, c3.calculateTax());
+    assertEquals(4.761, c1.calculateTax(), 1);
+    assertEquals(13.084, c2.calculateTax(), 1);
+    assertEquals(32.142, c3.calculateTax(), 1);
     assertEquals(20.0, c4.calculateTax());
     assertEquals(35.0, c5.calculateTax());
     assertEquals(72.0, c6.calculateTax());

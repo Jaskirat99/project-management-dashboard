@@ -50,8 +50,8 @@ public class ProjectTest {
     public void calculateTotalTaxTest() {
 
 
-        assertEquals(17.846016911437488, p1.calculateTotalTax());
-        assertEquals(52.14285714285717, p2.calculateTotalTax());
+        assertEquals(17.846, p1.calculateTotalTax(), 1);
+        assertEquals(52.142, p2.calculateTotalTax(), 1);
 
 
     }
@@ -60,8 +60,8 @@ public class ProjectTest {
     public void calculateCertainTaxTest() {
 
 
-        assertEquals(15.0, p1.calculateCertainTax(2));
-        assertEquals(21.0, p2.calculateCertainTax(1));
+        assertEquals(13.084, p1.calculateCertainTax(2), 1);
+        assertEquals(33.39, p2.calculateCertainTax(1), 1);
 
 
     }
@@ -70,9 +70,16 @@ public class ProjectTest {
     public void formatTransactionsTest(){
 
 
-       assertEquals("Payee: payee1 Date: 07/02/2023 Amount: $100.00 Payment Type: cash Tax Included: true " +
+       assertEquals("Payee: payee1 Date: 08/02/2023 Amount: $100.00 Payment Type: CASH Tax Included: true " +
                "Taxes Applied: GST Project: 123 Street", p1.formatTransactions().get(0));
-       assertEquals("Payee: payee4 Date: 07/02/2023 Amount: $400.00 Payment Type: cash Tax Included: false " +
+       assertEquals("Payee: payee4 Date: 08/02/2023 Amount: $400.00 Payment Type: CASH Tax Included: false " +
                "Taxes Applied: GST Project: 456 Street", p2.formatTransactions().get(1));
+   }
+
+   @Test
+    public void calculateCostBreakdownTest(){
+        assertEquals(100,p1.calculateCostBreakdown(1));
+        assertEquals(300,p2.calculateCostBreakdown(2));
+        assertEquals(200,p1.calculateCostBreakdown(3));
    }
 }

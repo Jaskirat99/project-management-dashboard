@@ -55,10 +55,6 @@ public class Entry {
         this.payee = newPayee;
     }
 
-    public void setDate(String newDate) {
-        this.date = newDate;
-    }
-
     public void setPaymentType(String newPaymentType) {
         this.paymentType = newPaymentType;
     }
