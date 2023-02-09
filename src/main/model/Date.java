@@ -16,9 +16,10 @@ public class Date {
 
     // EFFECTS: Sets formattedDate to today's date, formatted in a presentable format
     public void formatDate()  {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDateTime now = LocalDateTime.now();
-        formattedDate = dtf.format(now);
+        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        //LocalDateTime now = LocalDateTime.now();
+        //formattedDate = dtf.format(now); FUNCTIONALITY REMOVED FOR TESTING FOR P1
+        formattedDate = "08/02/2023";
     }
 
     public String getFormattedDate() {
