@@ -17,6 +17,7 @@ public class ProjectTest {
         p1.createEntry("payee2",  "visa", true, "PST", 200);
         p2.createEntry("payee3",  "cheque", true, "BOTH", 300);
         p2.createEntry("payee4",  "cash", false, "GST", 400);
+
    }
 
    @Test
@@ -29,10 +30,10 @@ public class ProjectTest {
     public void createEntryTest() {
 
 
-        assertEquals(0,p1.transactions.get(0).getId());
-        assertEquals(1,p1.transactions.get(1).getId());
-        assertEquals(0, p2.transactions.get(0).getId());
-        assertEquals(1, p2.transactions.get(1).getId());
+        assertEquals(0,p1.getTransaction(0).getId());
+        assertEquals(1,p1.getTransaction(1).getId());
+        assertEquals(0, p2.getTransaction(0).getId());
+        assertEquals(1, p2.getTransaction(1).getId());
 
    }
 
@@ -58,10 +59,13 @@ public class ProjectTest {
 
     @Test
     public void calculateCertainTaxTest() {
+        p1.createEntry("payee5", "cash",false,"BOTH",500);
+        p2.createEntry("payee6", "cheque",true,"PST",600);
+        p2.createEntry("payee7", "cash",false,"BOTH",700);
+        p1.createEntry("payee8", "visa",true,"BOTH",800);
 
-
-        assertEquals(13.084, p1.calculateCertainTax(2), 1);
-        assertEquals(33.39, p2.calculateCertainTax(1), 1);
+        assertEquals(98.084, p1.calculateCertainTax(2), 1);
+        assertEquals(68.392, p2.calculateCertainTax(1), 1);
 
 
     }
@@ -78,8 +82,30 @@ public class ProjectTest {
 
    @Test
     public void calculateCostBreakdownTest(){
-        assertEquals(100,p1.calculateCostBreakdown(1));
-        assertEquals(300,p2.calculateCostBreakdown(2));
-        assertEquals(200,p1.calculateCostBreakdown(3));
+       p1.createEntry("payee8", "visa",true,"BOTH",800);
+
+       assertEquals(100,p1.calculateCostBreakdown(1));
+       assertEquals(400,p2.calculateCostBreakdown(1));
+       assertEquals(0,p1.calculateCostBreakdown(2));
+       assertEquals(300,p2.calculateCostBreakdown(2));
+       assertEquals(1000,p1.calculateCostBreakdown(3));
+       assertEquals(0,p2.calculateCostBreakdown(3));
+
+   }
+
+   @Test
+    public void targetSaleTest() {
+        p1.setTargetSale(100);
+        p2.setTargetSale(1234);
+
+        assertEquals(100,p1.getTargetSale());
+        assertEquals(1234, p2.getTargetSale());
+   }
+
+   @Test
+    public void transactionRetrievalTest() {
+
+        assertEquals(2, p1.getAllTransactions().size());
+        assertEquals(2, p2.getAllTransactions().size());
    }
 }

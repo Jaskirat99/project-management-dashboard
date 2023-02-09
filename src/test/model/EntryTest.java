@@ -63,5 +63,34 @@ class EntryTest {
     assertEquals(35.0, c5.calculateTax());
     assertEquals(72.0, c6.calculateTax());
     assertEquals(0, c7.calculateTax());
-}
+    }
+
+    @Test
+    public void settersTest() {
+        c1.setTaxType("GST");
+        c1.setTaxPaid(false);
+        c1.setAmount(101);
+        c1.setPaymentType("visa");
+        c1.setPayee("test");
+        c1.setProject("test");
+        c2.setTaxType("PST");
+        c2.setTaxPaid(true);
+        c2.setAmount(102);
+        c2.setPaymentType("cheque");
+        c2.setPayee("test2");
+        c2.setProject("test2");
+
+        assertEquals("GST", c1.getTaxType());
+        assertFalse(c1.getTaxPaid());
+        assertEquals(101,c1.getAmount());
+        assertEquals("visa", c1.getPaymentType());
+        assertEquals("test", c1.getPayee());
+        assertEquals("test", c1.getProject());
+        assertEquals("PST", c2.getTaxType());
+        assertTrue(c2.getTaxPaid());
+        assertEquals(102,c2.getAmount());
+        assertEquals("cheque", c2.getPaymentType());
+        assertEquals("test2", c2.getPayee());
+        assertEquals("test2", c2.getProject());
+    }
 }

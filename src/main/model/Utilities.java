@@ -2,9 +2,10 @@ package model;
 
 // Class to hold methods that are useful everywhere
 public class Utilities {
+    private int testFillerValue;
 
     // Miscellaneous utility functions
-    public Utilities(){}
+    public Utilities() {}
 
     // EFFECTS: Takes a double and formats that into a presentable string
     public static String formatNumbers(double raw) {
@@ -13,5 +14,7 @@ public class Utilities {
         return formattedStr;
     }
 
-
+    public int getTestFillerValue() {
+        return testFillerValue;
+    }
 }
