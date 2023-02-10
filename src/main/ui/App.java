@@ -91,8 +91,7 @@ public class App {
     private void amendTransaction() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Which project would you like to amend a transaction for?");
-            int choice = displayProjects();
+            int choice = displayProjects("Alright! Which project would you like to amend a transaction for?");
             System.out.println("Perfect! Please select a transaction from the below list ");
             printTransactions(choice);
             int transactionChoice = (Integer.parseInt(input.next())) - 1;
@@ -179,8 +178,7 @@ public class App {
     private void displayProjectSummary() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Which project would you like to see a summary for?");
-            int choice = displayProjects();
+            int choice = displayProjects("Alright! Which project would you like to see a summary for?");
             System.out.println("Perfect! Here are the details you requested");
             System.out.println("Project address: " + projects.get(choice).getAddress());
             System.out.println("Number of Transactions: " + projects.get(choice).getAllTransactions().size());
@@ -218,8 +216,7 @@ public class App {
     private void setTargets() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Which project would you like to set a target for?");
-            int choice = displayProjects();
+            int choice = displayProjects("Alright! Which project would you like to set a target for?");
             System.out.println("Perfect! How much are you expecting to sell project "
                     + projects.get(choice).getAddress() + " for? \nEnter a number below:");
             double amount = Double.parseDouble(input.next());
@@ -234,8 +231,7 @@ public class App {
     private void displayTaxInfo() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Which project would you like to see tax information for?");
-            int choice = displayProjects();
+            int choice = displayProjects("Alright! Which project would you like to see tax information for?");
             System.out.println("Perfect! The tax details for " + projects.get(choice).getAddress() + " are:");
             System.out.println("Total Tax Paid: " + formatNumbers(projects.get(choice).calculateTotalTax()));
             System.out.println("Total GST Paid: " + formatNumbers(projects.get(choice).calculateCertainTax(1)));
@@ -249,11 +245,11 @@ public class App {
     private void addNewTransaction() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Alright! Let's get started! \nWho is the payee of this transaction?: ");
+            int choice = displayProjects("Alright! Let's get started!, what project is this transaction for?");
+            System.out.println("Who is the payee of this transaction?: ");
             String payee = input.next();
             System.out.println("What is the amount of the transaction?");
             double amount = lookForAmountErrors();
-
             System.out.println("What is the purchase type (cheque, cash or visa)?");
             String purchaseType = input.next().toLowerCase();
             checkInvalidPurchaseType(purchaseType);
@@ -264,8 +260,7 @@ public class App {
             System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
             String taxType = input.next().toLowerCase();
             checkInvalidTaxType(taxType);
-            System.out.println("Lastly, what project is this transaction for?");
-            int choice = displayProjects();
+
 
             projects.get(choice).createEntry(payee,purchaseType,taxIncluded,taxType,amount);
             loopControl = displayEndScreen("Create another transaction");
@@ -319,8 +314,7 @@ public class App {
     private void displayTransactions() {
         int loopControl = 0;
         while (loopControl != 1) {
-            System.out.println("Which project would you like to view transactions for? ");
-            int choice = displayProjects();
+            int choice = displayProjects("Which project would you like to view transactions for? ");
             System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
             printTransactions(choice);
             loopControl = displayEndScreen("View the transactions again");
@@ -344,10 +338,11 @@ public class App {
 
     // EFFECTS: Displays all project addresses already created, if none exist then calls helper to handle case.
     // Returns which project user chose
-    private int displayProjects() {
+    private int displayProjects(String projectText) {
         if (projects.size() == 0) {
             handleEmptyProjects();
         } else {
+            System.out.println(projectText);
             for (int i = 0; i < projects.size(); i++) {
                 System.out.println((i + 1) + ". " + projects.get(i).getAddress());
             }
