@@ -30,5 +30,6 @@ to use
 - As a user, I want to be able to store an expected sale price for any project.
 - As a user, I want to be able to see an expected profit figure on any project
 - As a user, I want to be able to see how much of my cost went towards taxes (GST/PST)
+- As a user, I want to be able to make slight mistakes and the program correct me
 
  

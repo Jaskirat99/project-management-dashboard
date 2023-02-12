@@ -1,30 +1,27 @@
 package ui;
 
 import model.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import static model.Utilities.*;
 
 // Main UI class, runs the application through a central loop managed in runApp();
 public class App {
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
 
     private Scanner input = new Scanner(System.in).useDelimiter("\\n");
     List<Project> projects = new ArrayList<>();
 
     //EFFECTS: runs the application
-    public App() {
+    public App() throws FileNotFoundException {
         runApp();
     }
 
     // EFFECTS: Manages Main Loop, terminating app when "quit" input is given
-    private void runApp() {
+    private void runApp() throws FileNotFoundException {
         String userInput;
         boolean keepGoing = true;
 
@@ -64,7 +61,7 @@ public class App {
     }
 
     // EFFECTS: Calls appropriate methods based on input or calls method to handle invalid input
-    private void runCommand(String command) {
+    private void runCommand(String command) throws FileNotFoundException {
         switch (command.toLowerCase()) {
             case "1": createNewProject();
             break;
@@ -88,7 +85,7 @@ public class App {
     }
 
     // EFFECTS: prompts user to pick a specific project -> entry -> field of entry to amend and fix
-    private void amendTransaction() {
+    private void amendTransaction() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Which project would you like to amend a transaction for?");
@@ -106,8 +103,10 @@ public class App {
     }
 
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
-    // EFFECTS: Displays the different options for which aspect of a transaction to amend.
-    private void displayAmendOptions(int transactionAspect, int transactionChoice, int choice) {
+    // EFFECTS: Displays the different options for which aspect of a transaction to amend, sets those values to the
+    //          correct field and confirms the new field
+    private void displayAmendOptions(int transactionAspect, int transactionChoice, int choice)
+            throws FileNotFoundException {
         switch (transactionAspect) {
             case 1: System.out.println("What is the new payee?");
                 projects.get(choice).getTransaction(transactionChoice).setPayee(input.next());
@@ -139,8 +138,8 @@ public class App {
         }
     }
 
-    // EFFECTS: Informs user of invalid inputs and provides options to proceed
-    private String handleInvalidInput() {
+    // EFFECTS: Informs user of invalid inputs and provides options to proceed, calls itself if input is again invalid
+    private String handleInvalidInput() throws FileNotFoundException {
         System.out.println("Sorry! That input is not valid!");
         System.out.println("Enter: ");
         System.out.println("1 - To Quit Program ");
@@ -161,7 +160,7 @@ public class App {
     }
 
     // EFFECTS: Displays a menu that explains what the different options do.
-    private void displayHelpMenu() {
+    private void displayHelpMenu() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             System.out.println("Welcome to the help menu!\nBelow is a description of what each menu option does:");
@@ -175,21 +174,24 @@ public class App {
 
 
     // EFFECTS: Displays a menu that shows overall summary information of a chosen project
-    private void displayProjectSummary() {
+    private void displayProjectSummary() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Which project would you like to see a summary for?");
             System.out.println("Perfect! Here are the details you requested");
-            System.out.println("Project address: " + projects.get(choice).getAddress());
-            System.out.println("Number of Transactions: " + projects.get(choice).getAllTransactions().size());
-            System.out.println("Project Target: " + formatNumbers(projects.get(choice).getTargetSale()));
-            System.out.println("Total Project Cost So Far: " + formatNumbers(projects.get(choice).getTotalCost()));
+            System.out.println("Project address: " + ANSI_CYAN + projects.get(choice).getAddress() + ANSI_RESET);
+            System.out.println("Number of Transactions: " + ANSI_CYAN
+                    + projects.get(choice).getAllTransactions().size() + ANSI_RESET);
+            System.out.println("Project Target: " + ANSI_CYAN
+                    + formatNumbers(projects.get(choice).getTargetSale()) + ANSI_RESET);
+            System.out.println("Total Project Cost So Far: " + ANSI_CYAN
+                    + formatNumbers(projects.get(choice).getTotalCost()) + ANSI_RESET);
             System.out.println("Project Cash Cost So Far: "
-                    + formatNumbers(projects.get(choice).calculateCostBreakdown(1)));
+                    + ANSI_CYAN + formatNumbers(projects.get(choice).calculateCostBreakdown(1)) + ANSI_RESET);
             System.out.println("Project Cheque Cost So Far: "
-                    + formatNumbers(projects.get(choice).calculateCostBreakdown(2)));
+                    + ANSI_CYAN + formatNumbers(projects.get(choice).calculateCostBreakdown(2)) + ANSI_RESET);
             System.out.println("Project Visa Cost So Far: "
-                    + formatNumbers(projects.get(choice).calculateCostBreakdown(3)));
+                    + ANSI_CYAN + formatNumbers(projects.get(choice).calculateCostBreakdown(3)) + ANSI_RESET);
             displayTargetBudgetInformation(choice);
             loopControl = displayEndScreen("View Another Project Summary");
         }
@@ -199,13 +201,13 @@ public class App {
     private void displayTargetBudgetInformation(int choice) {
         if (projects.get(choice).getTargetSale() > 0) {
             if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
-                System.out.println("You are over budget by "
+                System.out.println("You are over budget by " + ANSI_CYAN
                         + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
-                        + "!!!!");
+                        + ANSI_RESET + "!!!!");
             } else {
-                System.out.println("You are on track!! Your budget still allows for another "
+                System.out.println("You are on track!! Your budget still allows for another " + ANSI_CYAN
                         + formatNumbers(projects.get(choice).getTargetSale()
-                        - projects.get(choice).getTotalCost()));
+                        - projects.get(choice).getTotalCost())  + ANSI_RESET);
             }
         } else {
             System.out.println("You must set a target before you can view your budget information!!");
@@ -213,7 +215,7 @@ public class App {
     }
 
     // EFFECTS: Sets a target price for expected sale price (budget of project)
-    private void setTargets() {
+    private void setTargets() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Which project would you like to set a target for?");
@@ -222,27 +224,30 @@ public class App {
             double amount = Double.parseDouble(input.next());
             projects.get(choice).setTargetSale(amount);
             System.out.println("Okay! I've set the target price for " + projects.get(choice).getAddress()
-                    + " to be " + formatNumbers(projects.get(choice).getTargetSale()));
+                    + " to be " + ANSI_CYAN + formatNumbers(projects.get(choice).getTargetSale()) + ANSI_RESET);
             loopControl = displayEndScreen("Set another target");
         }
     }
 
     //EFFECTS: Displays information on tax breakdown
-    private void displayTaxInfo() {
+    private void displayTaxInfo() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Which project would you like to see tax information for?");
             System.out.println("Perfect! The tax details for " + projects.get(choice).getAddress() + " are:");
-            System.out.println("Total Tax Paid: " + formatNumbers(projects.get(choice).calculateTotalTax()));
-            System.out.println("Total GST Paid: " + formatNumbers(projects.get(choice).calculateCertainTax(1)));
-            System.out.println("Total PST Paid: " + formatNumbers(projects.get(choice).calculateCertainTax(2)));
+            System.out.println("Total Tax Paid: " + ANSI_CYAN
+                    + formatNumbers(projects.get(choice).calculateTotalTax()) + ANSI_RESET);
+            System.out.println("Total GST Paid: " + ANSI_CYAN
+                    + formatNumbers(projects.get(choice).calculateCertainTax(1)) + ANSI_RESET);
+            System.out.println("Total PST Paid: " + ANSI_CYAN
+                    + formatNumbers(projects.get(choice).calculateCertainTax(2)) + ANSI_RESET);
             loopControl = displayEndScreen("View more tax information");
         }
     }
 
 
     // EFFECTS: Prompts user to create new transaction
-    private void addNewTransaction() {
+    private void addNewTransaction() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Let's get started!, what project is this transaction for?");
@@ -253,8 +258,7 @@ public class App {
             System.out.println("What is the purchase type (cheque, cash or visa)?");
             String purchaseType = input.next().toLowerCase();
             checkInvalidPurchaseType(purchaseType);
-            System.out.println("The transaction will be dated to today's date");
-            System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no'?");
+            System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no')?");
             String temp = input.next().toLowerCase();
             Boolean taxIncluded = formatTaxIncluded(temp);
             System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
@@ -267,18 +271,29 @@ public class App {
         }
     }
 
-    private void checkInvalidPurchaseType(String purchaseType) {
-        if ((Objects.equals("cash", purchaseType))
-                || (Objects.equals("cheque", purchaseType))
-                || (Objects.equals("visa", purchaseType))) {
-            int temp;
-        } else {
+    // EFFECTS: Check's if input matches either "cash", "visa", "cheque" or a common misspelling of those words
+    private void checkInvalidPurchaseType(String purchaseType) throws FileNotFoundException {
+        File cash = new File("src/main/Resources/CashSpellings");
+        File visa = new File("src/main/Resources/VisaSpellings");
+        File cheque = new File("src/main/Resources/ChequeSpellings");
+        if (findCloseEnoughCorrectInput(cash, purchaseType)) {
+            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
+                    + " to 'cash'");
+        } else if (findCloseEnoughCorrectInput(cheque, purchaseType)) {
+            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
+                    + " to 'cheque'");
+        } else if (findCloseEnoughCorrectInput(visa, purchaseType)) {
+            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
+                    + " to 'visa'");
+        } else if (!(Objects.equals("cash", purchaseType.toLowerCase()))
+                && !(Objects.equals("cheque", purchaseType.toLowerCase()))
+                && !(Objects.equals("visa", purchaseType.toLowerCase()))) {
             handleInvalidInput();
         }
     }
 
     // EFFECTS: Checks if amount is a valid double
-    private double lookForAmountErrors() {
+    private double lookForAmountErrors() throws FileNotFoundException {
         double amount = 0;
         try {
             amount = Double.parseDouble(input.next());
@@ -288,8 +303,8 @@ public class App {
         return amount;
     }
 
-
-    private void checkInvalidTaxType(String taxType) {
+    // EFFECTS: Checks if given string is one of the valid accepted ones
+    private void checkInvalidTaxType(String taxType) throws FileNotFoundException {
         if ((Objects.equals("gst", taxType))
                 || (Objects.equals("pst", taxType))
                 || (Objects.equals("both", taxType))) {
@@ -299,10 +314,14 @@ public class App {
         }
     }
 
-    private boolean formatTaxIncluded(String temp) {
-        if (Objects.equals("yes", temp)) {
+    // EFFECTS: Converts a yes or no (and common typo variants) to a boolean state for the field or calls invalid input
+    //          handler
+    private boolean formatTaxIncluded(String temp) throws FileNotFoundException {
+        File yes = new File("src/main/Resources/YesSpellings");
+        File no = new File("src/main/Resources/NoSpellings");
+        if (Objects.equals("yes", temp) || findCloseEnoughCorrectInput(yes,temp)) {
             return true;
-        } else if (Objects.equals("no", temp)) {
+        } else if (Objects.equals("no", temp) || findCloseEnoughCorrectInput(no,temp)) {
             return false;
         } else {
             handleInvalidInput();
@@ -311,7 +330,7 @@ public class App {
     }
 
     // EFFECTS: Displays transactions for selected project or prompts you to create a project
-    private void displayTransactions() {
+    private void displayTransactions() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Which project would you like to view transactions for? ");
@@ -323,7 +342,7 @@ public class App {
     }
 
     // EFFECTS: Print all transactions for an existing project
-    private void printTransactions(int project) {
+    private void printTransactions(int project) throws FileNotFoundException {
         int counter = 1;
         if (projects.get(project).getAllTransactions().size() > 0) {
             for (int i = 0; i < projects.get(project).formatTransactions().size(); i++) {
@@ -338,7 +357,7 @@ public class App {
 
     // EFFECTS: Displays all project addresses already created, if none exist then calls helper to handle case.
     // Returns which project user chose
-    private int displayProjects(String projectText) {
+    private int displayProjects(String projectText) throws FileNotFoundException {
         if (projects.size() == 0) {
             handleEmptyProjects();
         } else {
@@ -353,7 +372,7 @@ public class App {
     }
 
     // EFFECTS: Prompts user to increase create new project
-    private void handleEmptyProjects() {
+    private void handleEmptyProjects() throws FileNotFoundException {
         System.out.println("Sorry! You don't have any projects to display! \nWould you like to create some?"
                 + " Enter '1' for yes or 2 to exit");
         int choice = Integer.parseInt(input.next());
@@ -367,7 +386,7 @@ public class App {
     }
 
     //EFFECTS: Creates new projects as long as user would like
-    private void createNewProject() {
+    private void createNewProject() throws FileNotFoundException {
         int loopControl = 0;
         while (loopControl != 1) {
             System.out.println("What is the address of the project you will like to create? ");
@@ -384,7 +403,7 @@ public class App {
     // REQUIRES: option1 is not empty
     // EFFECTS: Displays the end screen that is displayed after every operation is done. Option 1 text varies so is
     // supplied by the calling method.
-    private int displayEndScreen(String option1) {
+    private int displayEndScreen(String option1) throws FileNotFoundException {
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("Would you like to \n 1. " + option1 + " \n 2. View the main menu \n 3. Quit");
         int option = Integer.parseInt(input.next());
