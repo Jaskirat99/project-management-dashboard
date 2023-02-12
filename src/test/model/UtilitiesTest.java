@@ -22,9 +22,9 @@ public class UtilitiesTest {
 
     @Test
     public void findCloseEnoughCorrectInputTest() throws FileNotFoundException {
-        File cash = new File("src/main/Resources/CashSpellings");
-        File visa = new File("src/main/Resources/VisaSpellings");
-        File cheque = new File("src/main/Resources/ChequeSpellings");
+        File cash = new File("data/CashSpellings");
+        File visa = new File("data/VisaSpellings");
+        File cheque = new File("data/ChequeSpellings");
 
         assertTrue(findCloseEnoughCorrectInput(cash, "cashh"));
         assertTrue(findCloseEnoughCorrectInput(visa, "visaa"));

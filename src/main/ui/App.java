@@ -273,18 +273,21 @@ public class App {
 
     // EFFECTS: Check's if input matches either "cash", "visa", "cheque" or a common misspelling of those words
     private void checkInvalidPurchaseType(String purchaseType) throws FileNotFoundException {
-        File cash = new File("src/main/Resources/CashSpellings");
-        File visa = new File("src/main/Resources/VisaSpellings");
-        File cheque = new File("src/main/Resources/ChequeSpellings");
+        File cash = new File("data/CashSpellings");
+        File visa = new File("data/VisaSpellings");
+        File cheque = new File("data/ChequeSpellings");
         if (findCloseEnoughCorrectInput(cash, purchaseType)) {
-            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
-                    + " to 'cash'");
+            System.out.println("Looks like you might have misspelled your input! I have corrected "
+                    + ANSI_CYAN + purchaseType + ANSI_RESET
+                    + " to " + ANSI_CYAN + "'cash'" + ANSI_RESET);
         } else if (findCloseEnoughCorrectInput(cheque, purchaseType)) {
-            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
-                    + " to 'cheque'");
+            System.out.println("Looks like you might have misspelled your input! I have corrected "
+                    + ANSI_CYAN + purchaseType + ANSI_RESET
+                    + " to " + ANSI_CYAN + "'cheque'" + ANSI_RESET);
         } else if (findCloseEnoughCorrectInput(visa, purchaseType)) {
-            System.out.println("Looks like you might have misspelled your input! I have corrected " + purchaseType
-                    + " to 'visa'");
+            System.out.println("Looks like you might have misspelled your input! I have corrected "
+                    + ANSI_CYAN + purchaseType + ANSI_RESET
+                    + " to " + ANSI_CYAN + "'visa'" + ANSI_RESET);
         } else if (!(Objects.equals("cash", purchaseType.toLowerCase()))
                 && !(Objects.equals("cheque", purchaseType.toLowerCase()))
                 && !(Objects.equals("visa", purchaseType.toLowerCase()))) {
@@ -303,7 +306,7 @@ public class App {
         return amount;
     }
 
-    // EFFECTS: Checks if given string is one of the valid accepted ones
+    // EFFECTS: Checks if given string is one of the valid accepted ones else calls invalid input handler
     private void checkInvalidTaxType(String taxType) throws FileNotFoundException {
         if ((Objects.equals("gst", taxType))
                 || (Objects.equals("pst", taxType))
@@ -317,8 +320,8 @@ public class App {
     // EFFECTS: Converts a yes or no (and common typo variants) to a boolean state for the field or calls invalid input
     //          handler
     private boolean formatTaxIncluded(String temp) throws FileNotFoundException {
-        File yes = new File("src/main/Resources/YesSpellings");
-        File no = new File("src/main/Resources/NoSpellings");
+        File yes = new File("data/YesSpellings");
+        File no = new File("data/NoSpellings");
         if (Objects.equals("yes", temp) || findCloseEnoughCorrectInput(yes,temp)) {
             return true;
         } else if (Objects.equals("no", temp) || findCloseEnoughCorrectInput(no,temp)) {
@@ -334,7 +337,8 @@ public class App {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Which project would you like to view transactions for? ");
-            System.out.println("Sounds good! Here are the transactions for " + projects.get(choice).getAddress());
+            System.out.println("Sounds good! Here are the transactions for " + ANSI_CYAN
+                    + projects.get(choice).getAddress() + ANSI_RESET);
             printTransactions(choice);
             loopControl = displayEndScreen("View the transactions again");
         }
@@ -395,7 +399,7 @@ public class App {
             Project p1 = new Project(address);
             projects.add(p1);
 
-            System.out.println("Okay! I've created a new project called " + p1.getAddress());
+            System.out.println("Okay! I've created a new project called " + ANSI_CYAN + p1.getAddress() + ANSI_RESET);
             loopControl = displayEndScreen("Create another project");
         }
     }

@@ -83,13 +83,16 @@ public class ProjectTest {
    @Test
     public void calculateCostBreakdownTest(){
        p1.createEntry("payee8", "visa",true,"BOTH",800);
+       p1.createEntry("payee9", "visa",true,"BOTH",900);
+       p2.createEntry("payee10", "visa",false,"GST",1000);
+       p2.createEntry("payee11", "visa",false,"PST",1000);
 
        assertEquals(100,p1.calculateCostBreakdown(1));
        assertEquals(400,p2.calculateCostBreakdown(1));
        assertEquals(0,p1.calculateCostBreakdown(2));
        assertEquals(300,p2.calculateCostBreakdown(2));
-       assertEquals(1000,p1.calculateCostBreakdown(3));
-       assertEquals(0,p2.calculateCostBreakdown(3));
+       assertEquals(1900,p1.calculateCostBreakdown(3));
+       assertEquals(2000,p2.calculateCostBreakdown(3));
 
    }
 
