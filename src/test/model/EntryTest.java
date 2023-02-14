@@ -65,6 +65,7 @@ class EntryTest {
     assertEquals(0, c7.calculateTax());
     }
 
+    //These setters are only accessed by UI so not already tested by entry class
     @Test
     public void settersTest() {
         c1.setTaxType("GST");

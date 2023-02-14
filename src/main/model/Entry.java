@@ -31,22 +31,23 @@ public class Entry {
     // EFFECTS: Returns amount of tax that was paid on amount
     public double calculateTax() {
         if (taxPaid) {
-            if (taxType == "GST") {
+            if (taxType.equals("GST")) {
                 return ((amount - (amount / 1.05)));
-            } else if (taxType == "PST") {
+            } else if (taxType.equals("PST")) {
                 return (amount - (amount / 1.07));
             } else {
                 return (amount - (amount / 1.12));
             }
         } else {
-            if (taxType == "GST") {
-                return (amount * 0.05);
-            } else if (taxType == "PST") {
-                return (amount * 0.07);
-            } else if (taxType == "BOTH") {
-                return (amount * 0.12);
-            } else {
-                return (0);
+            switch (taxType) {
+                case "GST":
+                    return (amount * 0.05);
+                case "PST":
+                    return (amount * 0.07);
+                case "BOTH":
+                    return (amount * 0.12);
+                default:
+                    return (0);
             }
         }
     }
@@ -63,7 +64,7 @@ public class Entry {
         this.taxPaid = newTaxPaid;
     }
 
-    public void setAmount(int newAmount) {
+    public void setAmount(double newAmount) {
         this.amount = newAmount;
     }
 

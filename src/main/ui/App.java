@@ -103,6 +103,7 @@ public class App {
     }
 
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
+    // MODIFIES: this
     // EFFECTS: Displays the different options for which aspect of a transaction to amend, sets those values to the
     //          correct field and confirms the new field
     private void displayAmendOptions(int transactionAspect, int transactionChoice, int choice)
@@ -110,28 +111,30 @@ public class App {
         switch (transactionAspect) {
             case 1: System.out.println("What is the new payee?");
                 projects.get(choice).getTransaction(transactionChoice).setPayee(input.next());
-                System.out.println("Okay, I've set the payee to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getPayee());
+                System.out.println("Okay, I've set the payee to be " + ANSI_CYAN
+                        + projects.get(choice).getTransaction(transactionChoice).getPayee() + ANSI_RESET);
                 break;
             case 2: System.out.println("What is the new amount?");
-                projects.get(choice).getTransaction(transactionChoice).setAmount(Integer.parseInt(input.next()));
-                System.out.println("Okay, I've set the amount to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getAmount());
+                double amount = lookForAmountErrors();
+                projects.get(choice).getTransaction(transactionChoice).setAmount(amount);
+                System.out.println("Okay, I've set the amount to be " + ANSI_CYAN
+                        + formatNumbers(projects.get(choice).getTransaction(transactionChoice).getAmount())
+                        + ANSI_RESET);
                 break;
             case 3:System.out.println("What is the new Payment Type?");
                 projects.get(choice).getTransaction(transactionChoice).setPaymentType(input.next());
-                System.out.println("Okay, I've set the Payment Type to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getPaymentType());
+                System.out.println("Okay, I've set the Payment Type to be " + ANSI_CYAN
+                        + projects.get(choice).getTransaction(transactionChoice).getPaymentType() + ANSI_RESET);
                 break;
             case 4:System.out.println("Was Tax included?");
                 projects.get(choice).getTransaction(transactionChoice).setTaxPaid(Boolean.valueOf(input.next()));
-                System.out.println("Okay, I've set the tax included state to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getTaxPaid());
+                System.out.println("Okay, I've set the tax included state to be " + ANSI_CYAN
+                        + projects.get(choice).getTransaction(transactionChoice).getTaxPaid() + ANSI_RESET);
                 break;
             case 5:System.out.println("What is the new tax type (GST/PST/BOTH)?");
                 projects.get(choice).getTransaction(transactionChoice).setTaxType(input.next());
-                System.out.println("Okay, I've set the tax type to be "
-                        + projects.get(choice).getTransaction(transactionChoice).getTaxType());
+                System.out.println("Okay, I've set the tax type to be " + ANSI_CYAN
+                        + projects.get(choice).getTransaction(transactionChoice).getTaxType() + ANSI_RESET);
                 break;
 
             default: handleInvalidInput();
@@ -214,6 +217,7 @@ public class App {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: Sets a target price for expected sale price (budget of project)
     private void setTargets() throws FileNotFoundException {
         int loopControl = 0;
@@ -234,7 +238,8 @@ public class App {
         int loopControl = 0;
         while (loopControl != 1) {
             int choice = displayProjects("Alright! Which project would you like to see tax information for?");
-            System.out.println("Perfect! The tax details for " + projects.get(choice).getAddress() + " are:");
+            System.out.println("Perfect! The tax details for " + ANSI_CYAN
+                    + projects.get(choice).getAddress() + ANSI_RESET + " are:");
             System.out.println("Total Tax Paid: " + ANSI_CYAN
                     + formatNumbers(projects.get(choice).calculateTotalTax()) + ANSI_RESET);
             System.out.println("Total GST Paid: " + ANSI_CYAN
@@ -245,7 +250,7 @@ public class App {
         }
     }
 
-
+    // MODIFIES: this
     // EFFECTS: Prompts user to create new transaction
     private void addNewTransaction() throws FileNotFoundException {
         int loopControl = 0;
@@ -370,9 +375,8 @@ public class App {
                 System.out.println((i + 1) + ". " + projects.get(i).getAddress());
             }
         }
-        int choice = Integer.parseInt(input.next()) - 1;
 
-        return choice;
+        return (Integer.parseInt(input.next()) - 1);
     }
 
     // EFFECTS: Prompts user to increase create new project
@@ -389,6 +393,7 @@ public class App {
         }
     }
 
+    // MODIFIES: this
     //EFFECTS: Creates new projects as long as user would like
     private void createNewProject() throws FileNotFoundException {
         int loopControl = 0;
