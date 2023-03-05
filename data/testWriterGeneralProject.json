@@ -1,0 +1,24 @@
+[{
+    "entries": [
+        {
+            "payee": "Entry1",
+            "amount": 100,
+            "project": "Project1",
+            "ID": 0,
+            "taxPaid": true,
+            "taxType": "GST",
+            "paymentType": "Cash"
+        },
+        {
+            "payee": "Entry2",
+            "amount": 200,
+            "project": "Project1",
+            "ID": 1,
+            "taxPaid": false,
+            "taxType": "PST",
+            "paymentType": "Cheque"
+        }
+    ],
+    "address": "Project1",
+    "target": 0
+}]
