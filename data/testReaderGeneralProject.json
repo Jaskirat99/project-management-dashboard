@@ -1,0 +1,33 @@
+[{
+  "entries": [
+    {
+      "payee": "Entry1",
+      "paymentType": "Cheque",
+      "taxType": "PST",
+      "amount": 100.0,
+      "taxPaid": false
+    },
+    {
+      "payee": "Entry2",
+      "paymentType": "Visa",
+      "taxType": "BOTH",
+      "amount": 200.0,
+      "taxPaid": true
+    }
+  ],
+  "address": "Project 1",
+  "target": 100
+},
+{
+  "entries": [
+    {
+      "payee": "Entry3",
+      "paymentType": "Cash",
+      "taxType": "GST",
+      "amount": 300.0,
+      "taxPaid": true
+    }
+  ],
+  "address": "Project 2",
+  "target": 200
+}]

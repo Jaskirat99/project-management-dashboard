@@ -177,4 +177,7 @@ public class Project {
     public Entry getTransaction(int number) {
         return transactions.get(number);
     }
+
+    public int getNumberOfTransactions() {
+        return transactions.size(); }
 }
