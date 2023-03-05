@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -128,6 +131,25 @@ public class Project {
         return formattedTransactions;
     }
 
+    // EFFECTS: converts project information to JSON object
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("address", address);
+        json.put("entries", entriesToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray entriesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Entry e : transactions) {
+            jsonArray.put(e.toJson());
+        }
+
+        return jsonArray;
+    }
+
 
     public String getAddress() {
         return address;
@@ -143,6 +165,7 @@ public class Project {
     }
 
     public double getTotalCost() {
+        calculateTotalCost();
         return totalCost;
     }
 

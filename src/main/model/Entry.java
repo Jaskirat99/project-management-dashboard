@@ -1,6 +1,8 @@
 package model;
 
 
+import org.json.JSONObject;
+
 // Represents an individual transaction storing ID, project, payee, amount, date, payment type, tax paid
 public class Entry {
 
@@ -50,6 +52,19 @@ public class Entry {
                     return (0);
             }
         }
+    }
+
+    // EFFECTS: converts project information to JSON object
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("payee", payee);
+        json.put("paymentType", paymentType);
+        json.put("taxPaid",taxPaid);
+        json.put("amount", amount);
+        json.put("project", project);
+        json.put("taxType",taxType);
+        json.put("ID",id);
+        return json;
     }
 
     public void setPayee(String newPayee) {
@@ -112,4 +127,6 @@ public class Entry {
 
         return taxType;
     }
+
+
 }

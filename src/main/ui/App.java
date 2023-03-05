@@ -1,6 +1,8 @@
 package ui;
 
 import model.*;
+import persistence.ReadJson;
+import persistence.WriteJson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,13 +13,19 @@ import static model.Utilities.*;
 public class App {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_CYAN = "\u001B[36m";
-
+    private static final String JSON_DESTINATION = "./data/project.json";
+    File cash = new File("data/CashSpellings");
+    File visa = new File("data/VisaSpellings");
+    File cheque = new File("data/ChequeSpellings");
+    private WriteJson jsonWriter = new WriteJson(JSON_DESTINATION);
+    private ReadJson jsonReader  = new ReadJson(JSON_DESTINATION);
     private Scanner input = new Scanner(System.in).useDelimiter("\\n");
     List<Project> projects = new ArrayList<>();
 
     //EFFECTS: runs the application
     public App() throws FileNotFoundException {
         runApp();
+
     }
 
     // EFFECTS: Manages Main Loop, terminating app when "quit" input is given
@@ -51,6 +59,8 @@ public class App {
                             ANSI_CYAN + "5 " + ANSI_RESET + " - See Project Summaries",
                             ANSI_CYAN + "6 " + ANSI_RESET + " - Set Targets",
                             ANSI_CYAN + "7 " + ANSI_RESET + " - Amend A Transaction",
+                            ANSI_CYAN + "8 " + ANSI_RESET + " - Save your work",
+                            ANSI_CYAN + "9 " + ANSI_RESET + " - Load your work",
                             ANSI_CYAN + "X " + ANSI_RESET + " - Help",
                             ANSI_CYAN + "Y " + ANSI_RESET + "- Quit Application"};
 
@@ -77,10 +87,37 @@ public class App {
             break;
             case "7": amendTransaction();
             break;
+            case "8": saveState();
+                break;
+            case "9": loadState();
+                break;
             case "x": displayHelpMenu();
                 break;
             default: runCommand(handleInvalidInput());
         }
+
+    }
+
+    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
+    // EFFECTS: Attempts to save the current state of application, catches exception
+    private void saveState() throws FileNotFoundException {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(projects);
+            jsonWriter.close();
+            for (Project project : projects) {
+                System.out.println("Saved " + project.getAddress() + " to " + JSON_DESTINATION);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_DESTINATION);
+        }
+
+        displayEndScreen("Save again");
+    }
+
+    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
+    // EFFECTS: Attempts to load the current state of application, catches exception
+    private void loadState() {
 
     }
 
@@ -262,12 +299,12 @@ public class App {
             double amount = lookForAmountErrors();
             System.out.println("What is the purchase type (cheque, cash or visa)?");
             String purchaseType = input.next().toLowerCase();
-            checkInvalidPurchaseType(purchaseType);
+            purchaseType = checkInvalidPurchaseType(purchaseType);
             System.out.println("Is tax included in the transaction amount (Enter 'yes' or 'no')?");
             String temp = input.next().toLowerCase();
             Boolean taxIncluded = formatTaxIncluded(temp);
             System.out.println("What type of tax is this transaction subject to (GST/PST/BOTH)?");
-            String taxType = input.next().toLowerCase();
+            String taxType = input.next().toUpperCase();
             checkInvalidTaxType(taxType);
 
 
@@ -277,27 +314,29 @@ public class App {
     }
 
     // EFFECTS: Check's if input matches either "cash", "visa", "cheque" or a common misspelling of those words
-    private void checkInvalidPurchaseType(String purchaseType) throws FileNotFoundException {
-        File cash = new File("data/CashSpellings");
-        File visa = new File("data/VisaSpellings");
-        File cheque = new File("data/ChequeSpellings");
+    private String checkInvalidPurchaseType(String purchaseType) throws FileNotFoundException {
+
         if (findCloseEnoughCorrectInput(cash, purchaseType)) {
             System.out.println("Looks like you might have misspelled your input! I have corrected "
                     + ANSI_CYAN + purchaseType + ANSI_RESET
                     + " to " + ANSI_CYAN + "'cash'" + ANSI_RESET);
+            return "cash";
         } else if (findCloseEnoughCorrectInput(cheque, purchaseType)) {
             System.out.println("Looks like you might have misspelled your input! I have corrected "
                     + ANSI_CYAN + purchaseType + ANSI_RESET
                     + " to " + ANSI_CYAN + "'cheque'" + ANSI_RESET);
+            return "cheque";
         } else if (findCloseEnoughCorrectInput(visa, purchaseType)) {
             System.out.println("Looks like you might have misspelled your input! I have corrected "
                     + ANSI_CYAN + purchaseType + ANSI_RESET
                     + " to " + ANSI_CYAN + "'visa'" + ANSI_RESET);
+            return "visa";
         } else if (!(Objects.equals("cash", purchaseType.toLowerCase()))
                 && !(Objects.equals("cheque", purchaseType.toLowerCase()))
                 && !(Objects.equals("visa", purchaseType.toLowerCase()))) {
             handleInvalidInput();
         }
+        return purchaseType;
     }
 
     // EFFECTS: Checks if amount is a valid double
@@ -313,9 +352,9 @@ public class App {
 
     // EFFECTS: Checks if given string is one of the valid accepted ones else calls invalid input handler
     private void checkInvalidTaxType(String taxType) throws FileNotFoundException {
-        if ((Objects.equals("gst", taxType))
-                || (Objects.equals("pst", taxType))
-                || (Objects.equals("both", taxType))) {
+        if ((Objects.equals("GST", taxType))
+                || (Objects.equals("PST", taxType))
+                || (Objects.equals("BOTH", taxType))) {
             int temp;
         } else {
             handleInvalidInput();

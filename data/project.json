@@ -1,0 +1,18 @@
+[
+    {
+        "entries": [{
+            "payee": "jas",
+            "amount": 1000,
+            "project": "123",
+            "ID": 0,
+            "taxPaid": true,
+            "paymentType": "cash",
+            "taxType": "GST"
+        }],
+        "address": "123"
+    },
+    {
+        "entries": [],
+        "address": "456"
+    }
+]
