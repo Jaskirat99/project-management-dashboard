@@ -40,12 +40,26 @@ public class App {
 
             if ((userInput.equalsIgnoreCase("y"))) {
                 keepGoing = false;
+                assureWorkSaved();
             } else {
                 runCommand(userInput);
             }
         }
     }
 
+
+    private void assureWorkSaved() throws FileNotFoundException {
+        System.out.println("Is all of your work saved?");
+        System.out.println("1. Save work");
+        System.out.println("2. Quit");
+        int choice = input.nextInt();
+        switch (choice) {
+            case 1: saveState();
+            break;
+            case 2: System.exit(1);
+            default: handleInvalidInput();
+        }
+    }
 
 
     // EFFECTS: displays the menu of options and prompts user to select an option
@@ -469,7 +483,7 @@ public class App {
         } else if (option == 2) {
             runApp();
         } else if (option == 3) {
-            System.exit(1);
+            assureWorkSaved();
         } else {
             displayEndScreen(handleInvalidInput());
         }

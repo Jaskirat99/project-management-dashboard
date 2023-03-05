@@ -31,7 +31,8 @@ to use
 - As a user, I want to be able to see an expected profit figure on any project
 - As a user, I want to be able to see how much of my cost went towards taxes (GST/PST)
 - As a user, I want to be able to make slight mistakes and the program correct me
-- As a user, I want to be able to be presented the option to save the current state of the application
-- As a user, I want to be provided the choice to load existing data when I start the program
+- As a user, I want to be able to be presented the option to save the current state of the application and reminded to 
+do so
+- As a user, I want to be provided the choice to load existing data
 
  

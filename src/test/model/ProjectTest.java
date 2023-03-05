@@ -93,7 +93,8 @@ public class ProjectTest {
        assertEquals(300,p2.calculateCostBreakdown(2));
        assertEquals(1900,p1.calculateCostBreakdown(3));
        assertEquals(2000,p2.calculateCostBreakdown(3));
-
+       assertEquals(0,p2.calculateCostBreakdown(4));
+       assertEquals(0,p1.calculateCostBreakdown(4));
    }
 
    @Test
