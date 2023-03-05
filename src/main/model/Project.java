@@ -179,5 +179,6 @@ public class Project {
     }
 
     public int getNumberOfTransactions() {
-        return transactions.size(); }
+        return transactions.size();
+    }
 }
