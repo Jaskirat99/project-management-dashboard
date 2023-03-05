@@ -6,6 +6,7 @@ import persistence.WriteJson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import static model.Utilities.*;
 
@@ -117,8 +118,16 @@ public class App {
 
     // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
     // EFFECTS: Attempts to load the current state of application, catches exception
-    private void loadState() {
-
+    private void loadState() throws FileNotFoundException {
+        try {
+            projects = jsonReader.read();
+            for (Project p: projects) {
+                System.out.println("Loaded " + p.getAddress() + " from " + JSON_DESTINATION);
+            }
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_DESTINATION);
+        }
+        displayEndScreen("Load again");
     }
 
     // EFFECTS: prompts user to pick a specific project -> entry -> field of entry to amend and fix

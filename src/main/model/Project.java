@@ -135,6 +135,7 @@ public class Project {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("address", address);
+        json.put("target", targetSale);
         json.put("entries", entriesToJson());
         return json;
     }

@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import model.Project;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 
     // INSPIRED FROM UBC CPSC 210 JSON SERIALIZATION DEMO
     // Represents a reader that reads a single project from JSON data
@@ -23,10 +24,16 @@ public class ReadJson {
 
     // EFFECTS: reads project from file and returns it;
     // throws IOException if an error occurs reading data
-    public Project read() throws IOException {
+    public List<Project> read() throws IOException {
+        List<Project> projects = new ArrayList<>();
         String jsonData = readFile(source);
-        JSONObject jsonObject = new JSONObject(jsonData);
-        return parseProject(jsonObject);
+        JSONArray jsonArray = new JSONArray(jsonData);
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            projects.add(parseProject(jsonArray.getJSONObject(i)));
+        }
+
+        return projects;
     }
 
     // EFFECTS: reads source file as string and returns it
@@ -42,8 +49,10 @@ public class ReadJson {
 
     // EFFECTS: parses project from JSON object and returns it. Then constructs the project
     private Project parseProject(JSONObject jsonObject) {
-        String address = jsonObject.getString("name");
+        String address = jsonObject.getString("address");
+        double target = jsonObject.getDouble("target");
         Project project = new Project(address);
+        project.setTargetSale(target);
         addEntries(project, jsonObject);
         return project;
     }
