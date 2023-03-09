@@ -50,8 +50,8 @@ public class App {
 
     private void assureWorkSaved() throws FileNotFoundException {
         System.out.println("Is all of your work saved?");
-        System.out.println("1. Save work");
-        System.out.println("2. Quit");
+        System.out.println("1. Nope, I still want to save work");
+        System.out.println("2. Yes, let me quit");
         int choice = input.nextInt();
         switch (choice) {
             case 1: saveState();
@@ -136,7 +136,8 @@ public class App {
         try {
             projects = jsonReader.read();
             for (Project p: projects) {
-                System.out.println("Loaded " + p.getAddress() + " from " + JSON_DESTINATION);
+                System.out.println("Loaded " + p.getAddress() + " with " + p.getNumberOfTransactions()
+                        + " transactions from " + JSON_DESTINATION);
             }
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_DESTINATION);
@@ -437,8 +438,12 @@ public class App {
                 System.out.println((i + 1) + ". " + projects.get(i).getAddress());
             }
         }
+        int choice = Integer.parseInt(input.next()) - 1;
+        if (choice + 1 > projects.size()) {
+            handleInvalidInput();
+        }
 
-        return (Integer.parseInt(input.next()) - 1);
+        return choice;
     }
 
     // EFFECTS: Prompts user to increase create new project
