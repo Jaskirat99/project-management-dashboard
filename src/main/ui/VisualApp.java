@@ -3,19 +3,14 @@ package ui;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
-import ui.buttons.Button;
+import ui.buttons.HomeButton;
 import ui.buttons.LoadButton;
 import ui.buttons.SaveButton;
+import ui.screens.Image;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -31,8 +26,10 @@ public class VisualApp extends JFrame {
     private WriteJson jsonWriter;
     private ReadJson jsonReader;
     private Scanner input;
+    private JPanel mainPicturePanel = new JPanel();
+    private JPanel defaultPicturePanel = new JPanel();
     List<Project> projects;
-    //List<Button> buttons;
+    private Image activeImage;
 
     // MODIFIES: this
     // EFFECTS: Constructs a new GUI
@@ -42,6 +39,7 @@ public class VisualApp extends JFrame {
         initializeTopBar();
         initializeGraphics();
         initializeMainScreen();
+
 
     }
 
@@ -67,60 +65,70 @@ public class VisualApp extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
+        getContentPane().setBackground(Color.BLACK);
     }
 
     // MODIFIES: this
     // EFFECTS: Draws the top menu bar menu
     private void initializeTopBar() {
-        JMenu menu = new JMenu("File Options");
         JMenuBar mb = new JMenuBar();
+        JMenu fileMenu = new JMenu("File Options");
+        JMenu testMenu = new JMenu("test Options");
 
-        Button saveButton = new SaveButton(this,menu);
-        //buttons.add(saveButton);
-        Button deleteButton = new LoadButton(this,menu);
-        //buttons.add(deleteButton);
+        new HomeButton(this,mb);
+        new SaveButton(this,fileMenu);
+        new LoadButton(this,fileMenu);
 
-        mb.add(menu);
+        mb.add(fileMenu);
+        mb.add(testMenu);
         setJMenuBar(mb);
         setSize(400,400);
         setLayout(null);
         setVisible(true);
     }
     
-    //
+    // MODIFIES: this
+    // EFFECTS: Sets the main "home page" image
     private void initializeMainScreen() {
-        BufferedImage myPicture = null;
-        try {
-            myPicture = ImageIO.read(new File("data/mainScreen.png"));
-        } catch (IOException e) {
-            System.out.println("File not found");
-        }
-
-        JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-
-        add(picLabel);
+        defaultPicturePanel.setVisible(false);
+        mainPicturePanel.setVisible(true);
+        mainPicturePanel.add(new Image("data/mainScreen.png", mainPicturePanel));
+        add(mainPicturePanel);
         setVisible(true);
     }
+
+    // MODIFIES: this
+    // EFFECTS: Sets the default page image
+    private void initializeDefaultScreen() {
+        mainPicturePanel.setVisible(false);
+        defaultPicturePanel.setVisible(true);
+        defaultPicturePanel.add(new Image("data/defaultScreen.png", defaultPicturePanel));
+        add(defaultPicturePanel);
+        setVisible(true);
+    }
+
 
     // EFFECTS: Public accessor method for save button
     public void callSaveScreen() {
         saveScreen();
     }
 
+    // EFFECTS: Public accessor method for home button
+    public void callHomeScreen() {
+        initializeMainScreen();
+    }
+
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
     private void saveScreen() {
-        JPanel pm = new JPanel();
+        clearScreen();
+        initializeDefaultScreen();
 
-        // create a label
-        JLabel l = new JLabel("this is the popup menu");
+    }
 
-        // add the label to the popup
-        pm.add(l);
-
-        // add the popup to the frame
-        this.add(pm);
-        pm.setVisible(true);
+    private void clearScreen() {
+        this.getContentPane().removeAll();
+        this.repaint();
     }
 
 
