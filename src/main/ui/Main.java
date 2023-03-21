@@ -8,7 +8,7 @@ public class Main {
     // EFFECTS: Creates new instance of App class
     public static void main(String[] args) throws FileNotFoundException {
         try {
-            new App();
+            new VisualApp();
         } catch (Exception e) {
             System.out.println("Something went wrong! Shutting down...");
         }

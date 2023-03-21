@@ -1,40 +1,25 @@
 [
     {
-        "entries": [
-            {
-                "payee": "jas2",
-                "amount": 890,
-                "project": "123 street",
-                "ID": 0,
-                "taxPaid": true,
-                "taxType": "GST",
-                "paymentType": "cash"
-            },
-            {
-                "payee": "jas",
-                "amount": 950,
-                "project": "123 street",
-                "ID": 1,
-                "taxPaid": false,
-                "taxType": "BOTH",
-                "paymentType": "visa"
-            },
-            {
-                "payee": "jas1",
-                "amount": 789,
-                "project": "123 street",
-                "ID": 2,
-                "taxPaid": true,
-                "taxType": "GST",
-                "paymentType": "cheque"
-            }
-        ],
-        "address": "123 street",
-        "target": 900000
+        "entries": [],
+        "address": "242",
+        "target": 0
+    },
+    {
+        "entries": [{
+            "payee": "jas",
+            "amount": 789,
+            "project": "789",
+            "ID": 0,
+            "taxPaid": true,
+            "taxType": "GST",
+            "paymentType": "cash"
+        }],
+        "address": "789",
+        "target": 0
     },
     {
         "entries": [],
-        "address": "456",
-        "target": 900000
+        "address": "9",
+        "target": 0
     }
 ]
