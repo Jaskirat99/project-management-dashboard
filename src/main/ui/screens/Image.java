@@ -1,7 +1,5 @@
 package ui.screens;
 
-import ui.VisualApp;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ComponentAdapter;

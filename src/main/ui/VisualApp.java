@@ -3,14 +3,17 @@ package ui;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
+import ui.buttons.ConfirmSaveButton;
 import ui.buttons.HomeButton;
 import ui.buttons.LoadButton;
 import ui.buttons.SaveButton;
 import ui.screens.Image;
 
 import javax.swing.*;
+import javax.swing.text.BoxView;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -19,6 +22,7 @@ import java.util.Scanner;
 public class VisualApp extends JFrame {
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 700;
+    private static final Color GOLD = new Color(174,154,127);
     private static final String JSON_DESTINATION = "./data/project.json";
     File cash;
     File visa;
@@ -27,9 +31,9 @@ public class VisualApp extends JFrame {
     private ReadJson jsonReader;
     private Scanner input;
     private JPanel mainPicturePanel = new JPanel();
-    private JPanel defaultPicturePanel = new JPanel();
+    private JPanel defaultPanel = new JPanel();
+
     List<Project> projects;
-    private Image activeImage;
 
     // MODIFIES: this
     // EFFECTS: Constructs a new GUI
@@ -64,8 +68,8 @@ public class VisualApp extends JFrame {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        //add(layeredPane, BorderLayout.CENTER);
         setVisible(true);
-        getContentPane().setBackground(Color.BLACK);
     }
 
     // MODIFIES: this
@@ -90,22 +94,15 @@ public class VisualApp extends JFrame {
     // MODIFIES: this
     // EFFECTS: Sets the main "home page" image
     private void initializeMainScreen() {
-        defaultPicturePanel.setVisible(false);
+        clearScreen();
+        setLayout(new BorderLayout());
         mainPicturePanel.setVisible(true);
         mainPicturePanel.add(new Image("data/mainScreen.png", mainPicturePanel));
         add(mainPicturePanel);
         setVisible(true);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Sets the default page image
-    private void initializeDefaultScreen() {
-        mainPicturePanel.setVisible(false);
-        defaultPicturePanel.setVisible(true);
-        defaultPicturePanel.add(new Image("data/defaultScreen.png", defaultPicturePanel));
-        add(defaultPicturePanel);
-        setVisible(true);
-    }
+
 
 
     // EFFECTS: Public accessor method for save button
@@ -118,17 +115,75 @@ public class VisualApp extends JFrame {
         initializeMainScreen();
     }
 
+    // EFFECTS: Public accessor method for home button
+    public void callSaveData() {
+        saveState();
+    }
+
+    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
+    // EFFECTS: Attempts to save the current state of application, catches exception
+    private void saveState() {
+        if (projects.size() != 0) {
+            try {
+                jsonWriter.open();
+                jsonWriter.write(projects);
+                jsonWriter.close();
+                for (Project project : projects) {
+                    System.out.println("Saved " + project.getAddress() + " to " + JSON_DESTINATION);
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("Unable to write to file: " + JSON_DESTINATION);
+            }
+        } else {
+            clearScreen();
+            JLabel saveText = labelMaker("You Have No Projects To Save! Please Go Home And Create Some",
+                    28, "CENTER");
+            add(saveText);
+            setVisible(true);
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
     private void saveScreen() {
         clearScreen();
-        initializeDefaultScreen();
+        JLabel saveText = labelMaker("Please Confirm You Would Like To Save All Data", 28,
+                "TOP");
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+
+        add(saveText);
+        new ConfirmSaveButton(this, defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
 
     }
 
+
     private void clearScreen() {
         this.getContentPane().removeAll();
+        defaultPanel.removeAll();
         this.repaint();
+        getContentPane().setBackground(Color.BLACK);
+        defaultPanel.setBackground(Color.BLACK);
+
+    }
+
+    // REQUIRES: verticalAlignment ==  "TOP"  || verticalAlignment == "CENTER" || BOTTOM
+    // EFFECTS: Returns a label with given parameters. Uses standardized colors
+    private JLabel labelMaker(String text, int fontSize, String verticalAlignment) {
+        JLabel created = new JLabel(text,SwingConstants.CENTER);
+        created.setFont(new Font("Serif", Font.PLAIN, fontSize));
+        created.setForeground(GOLD);
+        if (verticalAlignment == "TOP") {
+            created.setVerticalAlignment(JLabel.TOP);
+        } else if (verticalAlignment == "CENTER") {
+            created.setVerticalAlignment(JLabel.CENTER);
+        } else if (verticalAlignment == "BOTTOM") {
+            created.setVerticalAlignment(JLabel.BOTTOM);
+        }
+        created.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+        return created;
     }
 
 
