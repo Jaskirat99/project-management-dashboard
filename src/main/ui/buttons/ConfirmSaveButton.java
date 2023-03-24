@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 
 public class ConfirmSaveButton extends Button {
     private static final Color GOLD = new Color(174,154,127);
@@ -21,14 +20,7 @@ public class ConfirmSaveButton extends Button {
         button = new JMenuItem("Yes, Save Data");
         button.setForeground(GOLD);
         button.setBackground(Color.BLACK);
-        //button.setVerticalAlignment(JButton.CENTER);
-        //button.setPreferredSize(new Dimension(100,50));
         addToParent(parent);
-    }
-
-    @Override
-    public void addToParent(JComponent parent) {
-        parent.add(button);
     }
 
     @Override
@@ -46,5 +38,3 @@ public class ConfirmSaveButton extends Button {
         }
     }
 }
-
-

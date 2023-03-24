@@ -33,7 +33,7 @@ public class VisualApp extends JFrame {
     private JPanel mainPicturePanel = new JPanel();
     private JPanel defaultPanel = new JPanel();
 
-    List<Project> projects;
+    List<Project> projects = new ArrayList<>();
 
     // MODIFIES: this
     // EFFECTS: Constructs a new GUI
@@ -57,8 +57,6 @@ public class VisualApp extends JFrame {
         jsonWriter = new WriteJson(JSON_DESTINATION);
         jsonReader  = new ReadJson(JSON_DESTINATION);
         input = new Scanner(System.in).useDelimiter("\\n");
-        projects = new ArrayList<>();
-        //buttons = new ArrayList<>();
     }
 
     // MODIFIES: this
@@ -90,7 +88,7 @@ public class VisualApp extends JFrame {
         setLayout(null);
         setVisible(true);
     }
-    
+
     // MODIFIES: this
     // EFFECTS: Sets the main "home page" image
     private void initializeMainScreen() {
@@ -123,13 +121,25 @@ public class VisualApp extends JFrame {
     // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
     // EFFECTS: Attempts to save the current state of application, catches exception
     private void saveState() {
+
+        projects.add(new Project("123"));
+        projects.add(new Project("456"));
+
         if (projects.size() != 0) {
             try {
                 jsonWriter.open();
                 jsonWriter.write(projects);
                 jsonWriter.close();
+
                 for (Project project : projects) {
                     System.out.println("Saved " + project.getAddress() + " to " + JSON_DESTINATION);
+                    for (int i = 0; i < projects.size(); i++) {
+                        clearScreen();
+                        String str = "Saved " + projects.get(i).getAddress() + " With "
+                                + projects.get(i).getNumberOfTransactions() + " Transactions";
+                        displayProjects(str, 24, "TOP");
+                        setVisible(true);
+                    }
                 }
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to write to file: " + JSON_DESTINATION);
@@ -142,6 +152,24 @@ public class VisualApp extends JFrame {
             setVisible(true);
         }
     }
+
+
+    // EFFECTS: Displays all existing projects
+    private void displayProjects(String text, int fontSize, String alignment) {
+        List<JLabel> labels = createLabelArray(text,fontSize,alignment);
+        for (int i = 0; i < labels.size(); i++) {
+            this.add(labels.get(i));
+        }
+    }
+
+    private List<JLabel> createLabelArray(String text, int fontSize, String alignment) {
+        List<JLabel> labels = new ArrayList<>();
+        for (int i = 0; i < projects.size(); i++) {
+            labels.add(labelMaker(text,fontSize,alignment));
+        }
+        return labels;
+    }
+
 
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
