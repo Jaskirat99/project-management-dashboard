@@ -29,7 +29,7 @@ public class LoadButton extends Button {
         //          called by the framework when the tool is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            editor.loadScreen();
         }
     }
 }

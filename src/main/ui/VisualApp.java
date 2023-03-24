@@ -3,10 +3,7 @@ package ui;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
-import ui.buttons.ConfirmSaveButton;
-import ui.buttons.HomeButton;
-import ui.buttons.LoadButton;
-import ui.buttons.SaveButton;
+import ui.buttons.*;
 import ui.screens.Image;
 
 import javax.swing.*;
@@ -14,6 +11,7 @@ import javax.swing.text.BoxView;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -44,9 +42,7 @@ public class VisualApp extends JFrame {
         initializeGraphics();
         initializeMainScreen();
 
-
     }
-
 
     // MODIFIES: this
     // EFFECTS: initializes spelling file locations, json writer/reader destinations, scanner and projects arraylist
@@ -75,14 +71,22 @@ public class VisualApp extends JFrame {
     private void initializeTopBar() {
         JMenuBar mb = new JMenuBar();
         JMenu fileMenu = new JMenu("File Options");
-        JMenu testMenu = new JMenu("test Options");
+        JMenu projectMenu = new JMenu("Project Options");
+        JMenu entryMenu = new JMenu("Entry Options");
 
         new HomeButton(this,mb);
         new SaveButton(this,fileMenu);
         new LoadButton(this,fileMenu);
+        new CreateProjectButton(this, projectMenu);
+        new ProjectSummaryButton(this, projectMenu);
+        new ProjectTargetButton(this, projectMenu);
+        new CreateEntryButton(this, entryMenu);
+        new ViewEntriesButton(this, entryMenu);
+        new AmmendEntryButton(this, entryMenu);
 
         mb.add(fileMenu);
-        mb.add(testMenu);
+        mb.add(projectMenu);
+        mb.add(entryMenu);
         setJMenuBar(mb);
         setSize(400,400);
         setLayout(null);
@@ -100,80 +104,9 @@ public class VisualApp extends JFrame {
         setVisible(true);
     }
 
-
-
-
-    // EFFECTS: Public accessor method for save button
-    public void callSaveScreen() {
-        saveScreen();
-    }
-
-    // EFFECTS: Public accessor method for home button
-    public void callHomeScreen() {
-        initializeMainScreen();
-    }
-
-    // EFFECTS: Public accessor method for home button
-    public void callSaveData() {
-        saveState();
-    }
-
-    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
-    // EFFECTS: Attempts to save the current state of application, catches exception
-    private void saveState() {
-
-        projects.add(new Project("123"));
-        projects.add(new Project("456"));
-
-        if (projects.size() != 0) {
-            try {
-                jsonWriter.open();
-                jsonWriter.write(projects);
-                jsonWriter.close();
-
-                for (Project project : projects) {
-                    System.out.println("Saved " + project.getAddress() + " to " + JSON_DESTINATION);
-                    for (int i = 0; i < projects.size(); i++) {
-                        clearScreen();
-                        String str = "Saved " + projects.get(i).getAddress() + " With "
-                                + projects.get(i).getNumberOfTransactions() + " Transactions";
-                        displayProjects(str, 24, "TOP");
-                        setVisible(true);
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println("Unable to write to file: " + JSON_DESTINATION);
-            }
-        } else {
-            clearScreen();
-            JLabel saveText = labelMaker("You Have No Projects To Save! Please Go Home And Create Some",
-                    28, "CENTER");
-            add(saveText);
-            setVisible(true);
-        }
-    }
-
-
-    // EFFECTS: Displays all existing projects
-    private void displayProjects(String text, int fontSize, String alignment) {
-        List<JLabel> labels = createLabelArray(text,fontSize,alignment);
-        for (int i = 0; i < labels.size(); i++) {
-            this.add(labels.get(i));
-        }
-    }
-
-    private List<JLabel> createLabelArray(String text, int fontSize, String alignment) {
-        List<JLabel> labels = new ArrayList<>();
-        for (int i = 0; i < projects.size(); i++) {
-            labels.add(labelMaker(text,fontSize,alignment));
-        }
-        return labels;
-    }
-
-
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
-    private void saveScreen() {
+    public void saveScreen() {
         clearScreen();
         JLabel saveText = labelMaker("Please Confirm You Would Like To Save All Data", 28,
                 "TOP");
@@ -186,13 +119,75 @@ public class VisualApp extends JFrame {
 
     }
 
+    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
+    // MODIFIES: project.json
+    // EFFECTS: Attempts to save the current state of application, catches exception
+    public void saveState() {
+        if (projects.size() != 0) {
+            try {
+                jsonWriter.open();
+                jsonWriter.write(projects);
+                jsonWriter.close();
 
-    private void clearScreen() {
-        this.getContentPane().removeAll();
-        defaultPanel.removeAll();
-        this.repaint();
-        getContentPane().setBackground(Color.BLACK);
-        defaultPanel.setBackground(Color.BLACK);
+                clearScreen();
+                for (int i = 0; i < projects.size(); i++) {
+                    String str = "Saved " + projects.get(i).getAddress() + " With "
+                            + projects.get(i).getNumberOfTransactions() + " Transactions";
+                    add(labelMaker(str,24, "TOP"));
+                    setVisible(true);
+                }
+
+            } catch (FileNotFoundException e) {
+                System.out.println("Unable to write to file: " + JSON_DESTINATION);
+            }
+        } else {
+            clearScreen();
+            JLabel saveText = labelMaker("You Have No Projects To Save! Please Go Home And Create Some",
+                    28, "CENTER");
+            add(saveText);
+            setVisible(true);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Draws the screen that displays the loading options
+    public void loadScreen() {
+        clearScreen();
+        JLabel loadText = labelMaker("Please Confirm You Would Like To Load All Data", 28,
+                "TOP");
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+
+        add(loadText);
+        new ConfirmLoadButton(this, defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
+
+    }
+
+    // INSPIRED BY UBC CPSC 210 JSON SERIALIZATION DEMO
+    // EFFECTS: Attempts to load from given file
+    public void loadData() {
+        try {
+            projects = jsonReader.read();
+
+            if (projects.size() != 0) {
+                clearScreen();
+                for (int i = 0; i < projects.size(); i++) {
+                    String str = "Loaded " + projects.get(i).getAddress() + " With "
+                            + projects.get(i).getNumberOfTransactions() + " Transactions";
+                    add(labelMaker(str, 24, "TOP"));
+                    setVisible(true);
+                }
+            } else {
+                clearScreen();
+                JLabel loadText = labelMaker("You Have No Projects To Load! Please Go Home And Create Some",
+                        28, "CENTER");
+                add(loadText);
+                setVisible(true);
+            }
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_DESTINATION);
+        }
 
     }
 
@@ -214,6 +209,39 @@ public class VisualApp extends JFrame {
         return created;
     }
 
+    // MODIFIES: this
+    // EFFECTS: Displays all existing projects
+    private void displayProjects(String text, int fontSize, String alignment) {
+        List<JLabel> labels = createLabelArray(text,fontSize,alignment);
+        for (int i = 0; i < labels.size(); i++) {
+            this.add(labels.get(i));
+        }
+    }
+
+    // EFFECTS: Creates an array of labels with given parameters
+    private List<JLabel> createLabelArray(String text, int fontSize, String alignment) {
+        List<JLabel> labels = new ArrayList<>();
+        for (int i = 0; i < projects.size(); i++) {
+            labels.add(labelMaker(text,fontSize,alignment));
+        }
+        return labels;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Clears screen of all components and sets background to be plain black
+    private void clearScreen() {
+        this.getContentPane().removeAll();
+        defaultPanel.removeAll();
+        this.repaint();
+        getContentPane().setBackground(Color.BLACK);
+        defaultPanel.setBackground(Color.BLACK);
+
+    }
+
+    // EFFECTS: Public accessor method for home button
+    public void callHomeScreen() {
+        initializeMainScreen();
+    }
 
 }
 

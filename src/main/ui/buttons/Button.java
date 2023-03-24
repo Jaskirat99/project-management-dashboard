@@ -8,6 +8,7 @@ public abstract class Button {
     protected JMenuItem button;
     protected VisualApp editor;
 
+
     public Button(VisualApp editor, JComponent parent) {
         this.editor = editor;
         createButton(parent);
