@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a custom button specifically for project summary option
 public class ProjectSummaryButton extends Button {
     public ProjectSummaryButton(VisualApp editor, JComponent parent) {
         super(editor, parent);
@@ -24,11 +25,10 @@ public class ProjectSummaryButton extends Button {
 
     private class ProjectSummaryButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            editor.viewSummary();
         }
     }
 }

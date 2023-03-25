@@ -34,7 +34,7 @@ public class HomeButton extends Button {
 
     private class HomeButtonListener implements ActionListener {
 
-        // EFFECTS: Calls homeScreen method
+        // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
             editor.callHomeScreen();

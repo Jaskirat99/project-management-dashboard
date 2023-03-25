@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a custom button specifically for load button option
 public class LoadButton extends Button {
 
     public LoadButton(VisualApp editor, JComponent parent) {
@@ -25,8 +26,7 @@ public class LoadButton extends Button {
 
     private class DeleteButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
             editor.loadScreen();

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a custom button specifically for submit project option
 public class SubmitProjectButton extends Button {
     private static final Color GOLD = new Color(174,154,127);
 
@@ -35,8 +36,8 @@ public class SubmitProjectButton extends Button {
 
     private class SubmitProjectButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute option
+
         @Override
         public void actionPerformed(ActionEvent e) {
             editor.submitProject();

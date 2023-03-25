@@ -4,6 +4,7 @@ import ui.VisualApp;
 
 import javax.swing.*;
 
+// Represents a JButton, customizable by subclasses
 public abstract class Button {
     protected JMenuItem button;
     protected VisualApp editor;
@@ -19,7 +20,7 @@ public abstract class Button {
     // EFFECTS: creates a button
     protected abstract void createButton(JComponent parent);
 
-    // EFFECTS: adds a listener for this tool
+    // EFFECTS: adds a listener for this Button
     protected abstract void addListener();
 
     // MODIFIES: parent

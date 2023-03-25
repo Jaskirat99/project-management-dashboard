@@ -1,11 +1,11 @@
 package ui.buttons;
 
 import ui.VisualApp;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a custom button specifically for the ammend entry option
 public class AmmendEntryButton extends Button {
     public AmmendEntryButton(VisualApp editor, JComponent parent) {
         super(editor, parent);
@@ -24,8 +24,7 @@ public class AmmendEntryButton extends Button {
 
     private class AmmendEntryButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute ammend option
         @Override
         public void actionPerformed(ActionEvent e) {
 

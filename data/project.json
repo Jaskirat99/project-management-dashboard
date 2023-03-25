@@ -1,5 +1,17 @@
-[{
-    "entries": [],
-    "address": "123",
-    "target": 900
-}]
+[
+    {
+        "entries": [],
+        "address": "123",
+        "target": 900
+    },
+    {
+        "entries": [],
+        "address": "456 Street",
+        "target": 90
+    },
+    {
+        "entries": [],
+        "address": "789 Rd",
+        "target": 56789
+    }
+]

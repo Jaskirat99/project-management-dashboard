@@ -4,7 +4,6 @@ import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
 import ui.buttons.*;
-import ui.buttons.Button;
 import ui.screens.Image;
 
 import javax.swing.*;
@@ -31,6 +30,7 @@ public class VisualApp extends JFrame {
     private Scanner input;
     private JPanel mainPicturePanel = new JPanel();
     private JPanel defaultPanel = new JPanel();
+    private List<JRadioButton> projectButtonList = new ArrayList();
     private JTextField enterAddress = new JTextField("Replace This With String");
     private JTextField enterTarget = new JTextField("Replace This With Number");
 
@@ -83,7 +83,6 @@ public class VisualApp extends JFrame {
         new LoadButton(this,fileMenu);
         new CreateProjectButton(this, projectMenu);
         new ProjectSummaryButton(this, projectMenu);
-        new ProjectTargetButton(this, projectMenu);
         new CreateEntryButton(this, entryMenu);
         new ViewEntriesButton(this, entryMenu);
         new AmmendEntryButton(this, entryMenu);
@@ -109,7 +108,7 @@ public class VisualApp extends JFrame {
     }
 
     // MODIFIES: projects
-    // EFFECTS: Creates a new project
+    // EFFECTS: Creates a new project walk through
     public void createProject() {
         clearScreen();
         JLabel text = labelMaker("Please Fill Out The Following Blanks To Create A New Project",
@@ -161,6 +160,85 @@ public class VisualApp extends JFrame {
     }
 
     // MODIFIES: this
+    // EFFECTS: Displays summary for chosen project
+    public void viewSummary() {
+        clearScreen();
+        JLabel select = labelMaker("Please Select Which Project You Would Like To View A Summary For",
+                28, "TOP");
+        //setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        add(select);
+        displayProjects();
+        new SelectButton(this,defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Determines which project was selected by user and calls helper to display that projects information
+    public void selectPressed() {
+        int choice = -1;
+        for (int i = 0; i < projectButtonList.size(); i++) {
+            if (projectButtonList.get(i).isSelected()) {
+                choice = i;
+            }
+        }
+        clearScreen();
+        displayProjectsStats(choice);
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Displays summary for given project
+    private void displayProjectsStats(int choice) {
+        JLabel title = labelMaker("Below Is The Summary For " + projects.get(choice).getAddress(),
+                28, "TOP");
+        JLabel numTransactions = labelMaker("Number Of Transactions: "
+                        + projects.get(choice).getNumberOfTransactions(), 24, "TOP");
+        JLabel target = labelMaker("Target: "
+                + formatNumbers(projects.get(choice).getTargetSale()), 24, "TOP");
+        JLabel totalCost = labelMaker("Total Cost: "
+                + formatNumbers(projects.get(choice).getTotalCost()), 24, "TOP");
+        JLabel cashCost = labelMaker("Cash Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(1)), 24, "TOP");
+        JLabel chequeCost = labelMaker("Cheque Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(2)), 24, "TOP");
+        JLabel visaCost = labelMaker("Visa Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(3)), 24, "TOP");
+        add(title);
+        add(numTransactions);
+        add(target);
+        add(totalCost);
+        add(cashCost);
+        add(chequeCost);
+        add(visaCost);
+        setVisible(true);
+        displayTargetBudgetInfo(choice);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Informs user whether they are over or under budget
+    private void displayTargetBudgetInfo(int choice) {
+        JLabel targetInfo;
+        if (projects.get(choice).getTargetSale() > 0) {
+            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
+                targetInfo = labelMaker("You are over budget by "
+                        + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
+                        + " !!!!", 28, "TOP");
+            } else {
+                targetInfo = labelMaker("You are on track!! Your budget still allows for another "
+                        + formatNumbers(projects.get(choice).getTargetSale()) + " !!!", 28, "TOP");
+            }
+        } else {
+            targetInfo = labelMaker("You must set a target before you can view your budget information!!",
+                    28, "TOP");
+        }
+        add(targetInfo);
+        setVisible(true);
+    }
+
+    // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
     public void saveScreen() {
         clearScreen();
@@ -190,22 +268,18 @@ public class VisualApp extends JFrame {
                     String str = "Saved " + projects.get(i).getAddress() + " With "
                             + projects.get(i).getNumberOfTransactions() + " Transactions";
                     add(labelMaker(str,24, "TOP"));
-
                 }
+                new HomeButton(this,defaultPanel);
+                add(defaultPanel);
+                setVisible(true);
 
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to write to file: " + JSON_DESTINATION);
             }
         } else {
-            clearScreen();
-            JLabel saveText = labelMaker("You Have No Projects To Save! Please Go Home And Create Some",
-                    28, "CENTER");
-            add(saveText);
-
+            handleEmptyProjects("You Have No Projects To Save! Please Go Home And Create Some");
         }
-        new HomeButton(this,defaultPanel);
-        add(defaultPanel);
-        setVisible(true);
+
     }
 
     // MODIFIES: this
@@ -235,16 +309,11 @@ public class VisualApp extends JFrame {
                     String str = "Loaded " + projects.get(i).getAddress() + " With "
                             + projects.get(i).getNumberOfTransactions() + " Transactions";
                     add(labelMaker(str, 24, "TOP"));
-                    new HomeButton(this,defaultPanel);
-                    add(defaultPanel);
                 }
-            } else {
-                clearScreen();
-                JLabel loadText = labelMaker("You Have No Projects To Load! Please Go Home And Create Some",
-                        28, "CENTER");
-                add(loadText);
                 new HomeButton(this,defaultPanel);
                 add(defaultPanel);
+            } else {
+                handleEmptyProjects("You Have No Projects To Load! Please Go Home And Create Some");
             }
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_DESTINATION);
@@ -274,20 +343,37 @@ public class VisualApp extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: Displays all existing projects
-    private void displayProjects(String text, int fontSize, String alignment) {
-        List<JLabel> labels = createLabelArray(text,fontSize,alignment);
-        for (int i = 0; i < labels.size(); i++) {
-            this.add(labels.get(i));
+    private void displayProjects() {
+        if (projects.size() != 0) {
+            ButtonGroup g1 = new ButtonGroup();
+            JPanel radioPanel = new JPanel();
+            for (int i = 0; i < projects.size(); i++) {
+                JRadioButton j1 = new JRadioButton();
+                j1.setText(projects.get(i).getAddress());
+                j1.setForeground(GOLD);
+                j1.setFont(new Font("Serif", Font.PLAIN, 18));
+                j1.setBackground(Color.BLACK);
+                g1.add(j1);
+                radioPanel.add(j1);
+                projectButtonList.add(j1);
+            }
+            radioPanel.setBackground(Color.black);
+            add(radioPanel);
+            setVisible(true);
+        } else {
+            handleEmptyProjects("You Have No Projects To Display! Please Go Home And Create Some!");
         }
     }
 
-    // EFFECTS: Creates an array of labels with given parameters
-    private List<JLabel> createLabelArray(String text, int fontSize, String alignment) {
-        List<JLabel> labels = new ArrayList<>();
-        for (int i = 0; i < projects.size(); i++) {
-            labels.add(labelMaker(text,fontSize,alignment));
-        }
-        return labels;
+    // MODIFIES: this
+    // EFFECTS: Informs user that they have no projects to display
+    private void handleEmptyProjects(String input) {
+        clearScreen();
+        JLabel error = labelMaker(input, 28, "TOP");
+        defaultPanel.add(error);
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
     }
 
     // MODIFIES: this

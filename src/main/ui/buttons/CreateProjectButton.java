@@ -25,8 +25,7 @@ public class CreateProjectButton extends Button {
 
     private class CreateProjectButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
             editor.createProject();

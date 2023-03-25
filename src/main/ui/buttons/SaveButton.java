@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a custom button specifically for save option
 public class SaveButton extends Button {
 
     public SaveButton(VisualApp editor, JComponent parent) {
@@ -26,8 +27,7 @@ public class SaveButton extends Button {
 
     private class SaveButtonListener implements ActionListener {
 
-        // EFFECTS: sets active tool to the delete tool
-        //          called by the framework when the tool is clicked
+        // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
             editor.saveScreen();
