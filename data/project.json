@@ -1,12 +1,5 @@
-[
-    {
-        "entries": [],
-        "address": "123",
-        "target": 0
-    },
-    {
-        "entries": [],
-        "address": "456",
-        "target": 0
-    }
-]
+[{
+    "entries": [],
+    "address": "123",
+    "target": 900
+}]

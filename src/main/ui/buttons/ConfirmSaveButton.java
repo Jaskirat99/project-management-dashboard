@@ -20,6 +20,10 @@ public class ConfirmSaveButton extends Button {
         button = new JMenuItem("Yes, Save Data!");
         button.setForeground(GOLD);
         button.setBackground(Color.BLACK);
+        button.setPreferredSize(new Dimension(300,100));
+        button.setBorder(BorderFactory.createLineBorder(GOLD));
+        button.setHorizontalAlignment(SwingConstants.CENTER);
+        button.setFont(new Font("Serif", Font.PLAIN, 20));
         addToParent(parent);
     }
 

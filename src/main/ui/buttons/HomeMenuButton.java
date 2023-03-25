@@ -7,10 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HomeButton extends Button {
-    private static final Color GOLD = new Color(174,154,127);
+public class HomeMenuButton extends Button {
 
-    public HomeButton(VisualApp editor, JComponent parent) {
+    public HomeMenuButton(VisualApp editor, JComponent parent) {
         super(editor, parent);
 
     }
@@ -18,12 +17,6 @@ public class HomeButton extends Button {
     @Override
     protected void createButton(JComponent parent) {
         button = new JMenuItem("Home");
-        button.setForeground(GOLD);
-        button.setBackground(Color.BLACK);
-        button.setPreferredSize(new Dimension(300,100));
-        button.setBorder(BorderFactory.createLineBorder(GOLD));
-        button.setHorizontalAlignment(SwingConstants.CENTER);
-        button.setFont(new Font("Serif", Font.PLAIN, 20));
         addToParent(parent);
     }
 

@@ -29,7 +29,7 @@ public class CreateProjectButton extends Button {
         //          called by the framework when the tool is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            editor.createProject();
         }
     }
 }

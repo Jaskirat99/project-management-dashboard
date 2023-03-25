@@ -4,10 +4,10 @@ import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
 import ui.buttons.*;
+import ui.buttons.Button;
 import ui.screens.Image;
 
 import javax.swing.*;
-import javax.swing.text.BoxView;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import static model.Utilities.*;
 
 // Represents a GUI app
 public class VisualApp extends JFrame {
@@ -30,6 +31,9 @@ public class VisualApp extends JFrame {
     private Scanner input;
     private JPanel mainPicturePanel = new JPanel();
     private JPanel defaultPanel = new JPanel();
+    private JTextField enterAddress = new JTextField("Replace This With String");
+    private JTextField enterTarget = new JTextField("Replace This With Number");
+
 
     List<Project> projects = new ArrayList<>();
 
@@ -74,7 +78,7 @@ public class VisualApp extends JFrame {
         JMenu projectMenu = new JMenu("Project Options");
         JMenu entryMenu = new JMenu("Entry Options");
 
-        new HomeButton(this,mb);
+        new HomeMenuButton(this,mb);
         new SaveButton(this,fileMenu);
         new LoadButton(this,fileMenu);
         new CreateProjectButton(this, projectMenu);
@@ -101,6 +105,58 @@ public class VisualApp extends JFrame {
         mainPicturePanel.setVisible(true);
         mainPicturePanel.add(new Image("data/mainScreen.png", mainPicturePanel));
         add(mainPicturePanel);
+        setVisible(true);
+    }
+
+    // MODIFIES: projects
+    // EFFECTS: Creates a new project
+    public void createProject() {
+        clearScreen();
+        JLabel text = labelMaker("Please Fill Out The Following Blanks To Create A New Project",
+                28, "TOP");
+        JLabel addressText = labelMaker("Enter Address Below:",
+                28, "TOP");
+        JLabel targetText = labelMaker("Enter Estimated Sale Price Below:",
+                28, "TOP");
+        formatTargetAndAddress();
+        new SubmitProjectButton(this,defaultPanel);
+
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        add(text);
+        add(addressText);
+        add(enterAddress);
+        add(targetText);
+        add(enterTarget);
+        add(defaultPanel);
+        setVisible(true);
+    }
+
+    // EFFECTS: Helper method for createProject(). Formats enterAddress & enterTarget
+    private void formatTargetAndAddress() {
+        enterAddress.setForeground(GOLD);
+        enterAddress.setBackground(Color.BLACK);
+        enterAddress.setBorder(BorderFactory.createLineBorder(GOLD));
+        enterAddress.setHorizontalAlignment(JTextField.CENTER);
+        enterAddress.setFont(new Font("Serif", Font.PLAIN, 18));
+        enterTarget.setForeground(GOLD);
+        enterTarget.setBackground(Color.BLACK);
+        enterTarget.setBorder(BorderFactory.createLineBorder(GOLD));
+        enterTarget.setHorizontalAlignment(JTextField.CENTER);
+        enterTarget.setFont(new Font("Serif", Font.PLAIN, 18));
+    }
+
+    // MODIFIES: projects
+    // EFFECTS Helper method for createProject(). Constructs new project when submitProject Button clicked
+    public void submitProject() {
+        clearScreen();
+        Project p1 = new Project(enterAddress.getText());
+        p1.setTargetSale(Double.parseDouble(enterTarget.getText()));
+        projects.add(p1);
+        String str = "Added " + p1.getAddress() + " With A Target Of "
+                + formatNumbers(p1.getTargetSale());
+        add(labelMaker(str,24, "TOP"));
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
         setVisible(true);
     }
 
@@ -134,7 +190,7 @@ public class VisualApp extends JFrame {
                     String str = "Saved " + projects.get(i).getAddress() + " With "
                             + projects.get(i).getNumberOfTransactions() + " Transactions";
                     add(labelMaker(str,24, "TOP"));
-                    setVisible(true);
+
                 }
 
             } catch (FileNotFoundException e) {
@@ -145,8 +201,11 @@ public class VisualApp extends JFrame {
             JLabel saveText = labelMaker("You Have No Projects To Save! Please Go Home And Create Some",
                     28, "CENTER");
             add(saveText);
-            setVisible(true);
+
         }
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
     }
 
     // MODIFIES: this
@@ -176,18 +235,22 @@ public class VisualApp extends JFrame {
                     String str = "Loaded " + projects.get(i).getAddress() + " With "
                             + projects.get(i).getNumberOfTransactions() + " Transactions";
                     add(labelMaker(str, 24, "TOP"));
-                    setVisible(true);
+                    new HomeButton(this,defaultPanel);
+                    add(defaultPanel);
                 }
             } else {
                 clearScreen();
                 JLabel loadText = labelMaker("You Have No Projects To Load! Please Go Home And Create Some",
                         28, "CENTER");
                 add(loadText);
-                setVisible(true);
+                new HomeButton(this,defaultPanel);
+                add(defaultPanel);
             }
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_DESTINATION);
         }
+        setVisible(true);
+
 
     }
 
