@@ -10,9 +10,11 @@ import java.awt.event.ActionListener;
 // Represents a custom button specifically for select option
 public class SelectButton extends Button {
     private static final Color GOLD = new Color(174,154,127);
+    private String version;
 
-    public SelectButton(VisualApp editor, JComponent parent) {
+    public SelectButton(VisualApp editor, JComponent parent, String version) {
         super(editor, parent);
+        this.version = version;
 
     }
 
@@ -38,7 +40,7 @@ public class SelectButton extends Button {
         // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
-            editor.selectPressed();
+            editor.selectPressed(version);
         }
     }
 }

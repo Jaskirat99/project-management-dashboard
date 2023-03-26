@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import static model.Utilities.*;
 
 // Represents a GUI app
@@ -27,7 +26,6 @@ public class VisualApp extends JFrame {
     File cheque;
     private WriteJson jsonWriter;
     private ReadJson jsonReader;
-    private Scanner input;
     private JPanel mainPicturePanel = new JPanel();
     private JPanel defaultPanel = new JPanel();
     private List<JRadioButton> projectButtonList = new ArrayList();
@@ -57,7 +55,6 @@ public class VisualApp extends JFrame {
         cheque = new File("data/ChequeSpellings");
         jsonWriter = new WriteJson(JSON_DESTINATION);
         jsonReader  = new ReadJson(JSON_DESTINATION);
-        input = new Scanner(System.in).useDelimiter("\\n");
     }
 
     // MODIFIES: this
@@ -160,26 +157,22 @@ public class VisualApp extends JFrame {
         setVisible(true);
     }
 
-//    // MODIFIES: this
-//    // EFFECTS: Displays summary for chosen project
-//    public void viewSummary() {
-//        clearScreen();
-//        JLabel select = labelMaker("Please Select Which Project You Would Like To View A Summary For",
-//                28, "TOP");
-//        defaultPanel.add(select);
-//        displayProjects();
-//        if (projects.size() != 0) {
-//            new SelectButton(this, defaultPanel);
-//        }
-//        add(defaultPanel);
-//        setVisible(true);
-//    }
+    // MODIFIES: this
+    // EFFECTS: Displays summary for chosen project
+    public void viewSummary() {
+        displayProjects("Please Select Which Project You Would Like To View A Summary For");
+        if (projects.size() != 0) {
+            new SelectButton(this, defaultPanel, "SUMMARY");
+        }
+        add(defaultPanel);
+        setVisible(true);
+    }
 
     // EFFECTS: Creates a new entry walk through for a chosen project
     public void createEntryMenu() {
         displayProjects("Please Select Which Project You Would Like To Create A Entry For");
         if (projects.size() != 0) {
-            new SelectButton(this, defaultPanel);
+            new SelectButton(this, defaultPanel, "ENTRY");
         }
         add(defaultPanel);
         setVisible(true);
@@ -187,7 +180,7 @@ public class VisualApp extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: Determines which project was selected by user and calls helper to display that projects information
-    public void selectPressed() {
+    public void selectPressed(String version) {
         int choice = -1;
         for (int i = 0; i < projectButtonList.size(); i++) {
             if (projectButtonList.get(i).isSelected()) {
@@ -195,8 +188,11 @@ public class VisualApp extends JFrame {
             }
         }
         clearScreen();
-        System.out.println(choice);
-        createEntry(choice);
+        if (version == "ENTRY") {
+            createEntry(choice);
+        } else if (version == "SUMMARY") {
+            displayProjectsStats(choice);
+        }
         new HomeButton(this,defaultPanel);
         add(defaultPanel);
         setVisible(true);
@@ -262,54 +258,54 @@ public class VisualApp extends JFrame {
         enterPurchaseType.setFont(new Font("Serif", Font.PLAIN, 18));
     }
 
-//    // MODIFIES: this
-//    // EFFECTS: Displays summary for given project
-//    private void displayProjectsStats(int choice) {
-//        JLabel title = labelMaker("Below Is The Summary For " + projects.get(choice).getAddress(),
-//                28, "TOP");
-//        JLabel numTransactions = labelMaker("Number Of Transactions: "
-//                        + projects.get(choice).getNumberOfTransactions(), 24, "TOP");
-//        JLabel target = labelMaker("Target: "
-//                + formatNumbers(projects.get(choice).getTargetSale()), 24, "TOP");
-//        JLabel totalCost = labelMaker("Total Cost: "
-//                + formatNumbers(projects.get(choice).getTotalCost()), 24, "TOP");
-//        JLabel cashCost = labelMaker("Cash Cost: "
-//                + formatNumbers(projects.get(choice).calculateCostBreakdown(1)), 24, "TOP");
-//        JLabel chequeCost = labelMaker("Cheque Cost: "
-//                + formatNumbers(projects.get(choice).calculateCostBreakdown(2)), 24, "TOP");
-//        JLabel visaCost = labelMaker("Visa Cost: "
-//                + formatNumbers(projects.get(choice).calculateCostBreakdown(3)), 24, "TOP");
-//        add(title);
-//        add(numTransactions);
-//        add(target);
-//        add(totalCost);
-//        add(cashCost);
-//        add(chequeCost);
-//        add(visaCost);
-//        setVisible(true);
-//        displayTargetBudgetInfo(choice);
-//    }
-//
-//    // MODIFIES: this
-//    // EFFECTS: Informs user whether they are over or under budget
-//    private void displayTargetBudgetInfo(int choice) {
-//        JLabel targetInfo;
-//        if (projects.get(choice).getTargetSale() > 0) {
-//            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
-//                targetInfo = labelMaker("You are over budget by "
-//                        + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
-//                        + " !!!!", 28, "TOP");
-//            } else {
-//                targetInfo = labelMaker("You are on track!! Your budget still allows for another "
-//                        + formatNumbers(projects.get(choice).getTargetSale()) + " !!!", 28, "TOP");
-//            }
-//        } else {
-//            targetInfo = labelMaker("You must set a target before you can view your budget information!!",
-//                    28, "TOP");
-//        }
-//        add(targetInfo);
-//        setVisible(true);
-//    }
+    // MODIFIES: this
+    // EFFECTS: Displays summary for given project
+    private void displayProjectsStats(int choice) {
+        JLabel numTransactions = labelMaker("Number Of Transactions: "
+                        + projects.get(choice).getNumberOfTransactions(), 24, "TOP");
+        JLabel target = labelMaker("Target: "
+                + formatNumbers(projects.get(choice).getTargetSale()), 24, "TOP");
+        JLabel totalCost = labelMaker("Total Cost: "
+                + formatNumbers(projects.get(choice).getTotalCost()), 24, "TOP");
+        JLabel cashCost = labelMaker("Cash Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(1)), 24, "TOP");
+        JLabel chequeCost = labelMaker("Cheque Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(2)), 24, "TOP");
+        JLabel visaCost = labelMaker("Visa Cost: "
+                + formatNumbers(projects.get(choice).calculateCostBreakdown(3)), 24, "TOP");
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        add(labelMaker("Below Is The Summary For " + projects.get(choice).getAddress(),
+                28, "TOP"));
+        add(numTransactions);
+        add(target);
+        add(totalCost);
+        add(cashCost);
+        add(chequeCost);
+        add(visaCost);
+        setVisible(true);
+        displayTargetBudgetInfo(choice);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Informs user whether they are over or under budget
+    private void displayTargetBudgetInfo(int choice) {
+        JLabel targetInfo;
+        if (projects.get(choice).getTargetSale() > 0) {
+            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
+                targetInfo = labelMaker("You are over budget by "
+                        + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
+                        + " !!!!", 28, "TOP");
+            } else {
+                targetInfo = labelMaker("You are on track!! Your budget still allows for another "
+                        + formatNumbers(projects.get(choice).getTargetSale()) + " !!!", 28, "TOP");
+            }
+        } else {
+            targetInfo = labelMaker("You must set a target before you can view your budget information!!",
+                    28, "TOP");
+        }
+        add(targetInfo);
+        setVisible(true);
+    }
 
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
@@ -337,10 +333,10 @@ public class VisualApp extends JFrame {
                 jsonWriter.close();
 
                 clearScreen();
-                for (int i = 0; i < projects.size(); i++) {
-                    String str = "Saved " + projects.get(i).getAddress() + " With "
-                            + projects.get(i).getNumberOfTransactions() + " Transactions";
-                    add(labelMaker(str,24, "TOP"));
+                for (Project project : projects) {
+                    String str = "Saved " + project.getAddress() + " With "
+                            + project.getNumberOfTransactions() + " Transactions";
+                    add(labelMaker(str, 24, "TOP"));
                 }
                 new HomeButton(this,defaultPanel);
                 add(defaultPanel);
@@ -378,9 +374,9 @@ public class VisualApp extends JFrame {
 
             if (projects.size() != 0) {
                 clearScreen();
-                for (int i = 0; i < projects.size(); i++) {
-                    String str = "Loaded " + projects.get(i).getAddress() + " With "
-                            + projects.get(i).getNumberOfTransactions() + " Transactions";
+                for (Project project : projects) {
+                    String str = "Loaded " + project.getAddress() + " With "
+                            + project.getNumberOfTransactions() + " Transactions";
                     add(labelMaker(str, 24, "TOP"));
                 }
                 new HomeButton(this,defaultPanel);
