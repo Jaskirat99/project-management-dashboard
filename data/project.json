@@ -5,7 +5,15 @@
         "target": 900
     },
     {
-        "entries": [],
+        "entries": [{
+            "payee": "Jas",
+            "amount": 900,
+            "project": "456 Street",
+            "ID": 0,
+            "taxPaid": false,
+            "taxType": "",
+            "paymentType": "Visa"
+        }],
         "address": "456 Street",
         "target": 90
     },

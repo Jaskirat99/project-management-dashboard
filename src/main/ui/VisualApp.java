@@ -33,6 +33,7 @@ public class VisualApp extends JFrame {
     private List<JRadioButton> projectButtonList = new ArrayList();
     private JTextField enterAddress = new JTextField("Replace This With String");
     private JTextField enterTarget = new JTextField("Replace This With Number");
+    JPanel radioPanel = new JPanel();
 
 
     List<Project> projects = new ArrayList<>();
@@ -159,16 +160,27 @@ public class VisualApp extends JFrame {
         setVisible(true);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Displays summary for chosen project
-    public void viewSummary() {
-        clearScreen();
-        JLabel select = labelMaker("Please Select Which Project You Would Like To View A Summary For",
-                28, "TOP");
-        //setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        add(select);
-        displayProjects();
-        new SelectButton(this,defaultPanel);
+//    // MODIFIES: this
+//    // EFFECTS: Displays summary for chosen project
+//    public void viewSummary() {
+//        clearScreen();
+//        JLabel select = labelMaker("Please Select Which Project You Would Like To View A Summary For",
+//                28, "TOP");
+//        defaultPanel.add(select);
+//        displayProjects();
+//        if (projects.size() != 0) {
+//            new SelectButton(this, defaultPanel);
+//        }
+//        add(defaultPanel);
+//        setVisible(true);
+//    }
+
+    // EFFECTS: Creates a new entry walk through for a chosen project
+    public void createEntryMenu() {
+        displayProjects("Please Select Which Project You Would Like To Create A Entry For");
+        if (projects.size() != 0) {
+            new SelectButton(this, defaultPanel);
+        }
         add(defaultPanel);
         setVisible(true);
     }
@@ -183,60 +195,121 @@ public class VisualApp extends JFrame {
             }
         }
         clearScreen();
-        displayProjectsStats(choice);
+        System.out.println(choice);
+        createEntry(choice);
         new HomeButton(this,defaultPanel);
         add(defaultPanel);
         setVisible(true);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Displays summary for given project
-    private void displayProjectsStats(int choice) {
-        JLabel title = labelMaker("Below Is The Summary For " + projects.get(choice).getAddress(),
-                28, "TOP");
-        JLabel numTransactions = labelMaker("Number Of Transactions: "
-                        + projects.get(choice).getNumberOfTransactions(), 24, "TOP");
-        JLabel target = labelMaker("Target: "
-                + formatNumbers(projects.get(choice).getTargetSale()), 24, "TOP");
-        JLabel totalCost = labelMaker("Total Cost: "
-                + formatNumbers(projects.get(choice).getTotalCost()), 24, "TOP");
-        JLabel cashCost = labelMaker("Cash Cost: "
-                + formatNumbers(projects.get(choice).calculateCostBreakdown(1)), 24, "TOP");
-        JLabel chequeCost = labelMaker("Cheque Cost: "
-                + formatNumbers(projects.get(choice).calculateCostBreakdown(2)), 24, "TOP");
-        JLabel visaCost = labelMaker("Visa Cost: "
-                + formatNumbers(projects.get(choice).calculateCostBreakdown(3)), 24, "TOP");
-        add(title);
-        add(numTransactions);
-        add(target);
-        add(totalCost);
-        add(cashCost);
-        add(chequeCost);
-        add(visaCost);
+    // EFFECTS: Constructs a new entry for chosen project
+    private void createEntry(int choice) {
+        JLabel text = labelMaker("Please Fill Out The Following Blanks To Create A New Entry For "
+                + projects.get(choice).getAddress(), 28, "TOP");
+        JLabel payeeText = labelMaker("Who Is The Payee?",
+                24, "TOP");
+        JLabel amountText = labelMaker("What Is The Amount Of The Transaction?",
+                24, "TOP");
+        JLabel purchaseTypeText = labelMaker("What is the purchase type (cheque, cash or visa)?",
+                24, "TOP");
+        JTextField enterPayee = new JTextField("Replace This With String");
+        JTextField enterAmount = new JTextField("Replace This With Double");
+        JTextField enterPurchaseType = new JTextField("Replace This With 'Cheque' or 'Visa' or 'Cash'");
+        formatEntryFields(enterPayee,enterAmount,enterPurchaseType);
+        new SubmitEntryButton(this,defaultPanel, enterPayee,enterAmount,enterPurchaseType, choice);
+
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        add(text);
+        add(payeeText);
+        add(enterPayee);
+        add(amountText);
+        add(enterAmount);
+        add(purchaseTypeText);
+        add(enterPurchaseType);
+        add(defaultPanel);
         setVisible(true);
-        displayTargetBudgetInfo(choice);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Informs user whether they are over or under budget
-    private void displayTargetBudgetInfo(int choice) {
-        JLabel targetInfo;
-        if (projects.get(choice).getTargetSale() > 0) {
-            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
-                targetInfo = labelMaker("You are over budget by "
-                        + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
-                        + " !!!!", 28, "TOP");
-            } else {
-                targetInfo = labelMaker("You are on track!! Your budget still allows for another "
-                        + formatNumbers(projects.get(choice).getTargetSale()) + " !!!", 28, "TOP");
-            }
-        } else {
-            targetInfo = labelMaker("You must set a target before you can view your budget information!!",
-                    28, "TOP");
-        }
-        add(targetInfo);
+    // EFFECTS Helper method for createEntry(). Constructs new entry when submitEntry Button clicked
+    public void submitEntry(JTextField enterPayee, JTextField enterAmount, JTextField enterPurchaseType, int choice) {
+        clearScreen();
+        projects.get(choice).createEntry(enterPayee.getText(),enterPurchaseType.getText(),false, "",
+                Double.parseDouble(enterAmount.getText()));
+        String str = "Added An Entry For " + enterPayee.getText() + " With Amount "
+                + formatNumbers(Double.parseDouble(enterAmount.getText())) + " Paid Via " + enterPurchaseType.getText();
+        add(labelMaker(str,24, "TOP"));
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
         setVisible(true);
     }
+
+    // EFFECTS: Helper method for createEntry(). Formats the Inputs for entry fields
+    private void formatEntryFields(JTextField enterPayee, JTextField enterAmount, JTextField enterPurchaseType) {
+        enterPayee.setForeground(GOLD);
+        enterPayee.setBackground(Color.BLACK);
+        enterPayee.setBorder(BorderFactory.createLineBorder(GOLD));
+        enterPayee.setHorizontalAlignment(JTextField.CENTER);
+        enterPayee.setFont(new Font("Serif", Font.PLAIN, 18));
+        enterAmount.setForeground(GOLD);
+        enterAmount.setBackground(Color.BLACK);
+        enterAmount.setBorder(BorderFactory.createLineBorder(GOLD));
+        enterAmount.setHorizontalAlignment(JTextField.CENTER);
+        enterAmount.setFont(new Font("Serif", Font.PLAIN, 18));
+        enterPurchaseType.setForeground(GOLD);
+        enterPurchaseType.setBackground(Color.BLACK);
+        enterPurchaseType.setBorder(BorderFactory.createLineBorder(GOLD));
+        enterPurchaseType.setHorizontalAlignment(JTextField.CENTER);
+        enterPurchaseType.setFont(new Font("Serif", Font.PLAIN, 18));
+    }
+
+//    // MODIFIES: this
+//    // EFFECTS: Displays summary for given project
+//    private void displayProjectsStats(int choice) {
+//        JLabel title = labelMaker("Below Is The Summary For " + projects.get(choice).getAddress(),
+//                28, "TOP");
+//        JLabel numTransactions = labelMaker("Number Of Transactions: "
+//                        + projects.get(choice).getNumberOfTransactions(), 24, "TOP");
+//        JLabel target = labelMaker("Target: "
+//                + formatNumbers(projects.get(choice).getTargetSale()), 24, "TOP");
+//        JLabel totalCost = labelMaker("Total Cost: "
+//                + formatNumbers(projects.get(choice).getTotalCost()), 24, "TOP");
+//        JLabel cashCost = labelMaker("Cash Cost: "
+//                + formatNumbers(projects.get(choice).calculateCostBreakdown(1)), 24, "TOP");
+//        JLabel chequeCost = labelMaker("Cheque Cost: "
+//                + formatNumbers(projects.get(choice).calculateCostBreakdown(2)), 24, "TOP");
+//        JLabel visaCost = labelMaker("Visa Cost: "
+//                + formatNumbers(projects.get(choice).calculateCostBreakdown(3)), 24, "TOP");
+//        add(title);
+//        add(numTransactions);
+//        add(target);
+//        add(totalCost);
+//        add(cashCost);
+//        add(chequeCost);
+//        add(visaCost);
+//        setVisible(true);
+//        displayTargetBudgetInfo(choice);
+//    }
+//
+//    // MODIFIES: this
+//    // EFFECTS: Informs user whether they are over or under budget
+//    private void displayTargetBudgetInfo(int choice) {
+//        JLabel targetInfo;
+//        if (projects.get(choice).getTargetSale() > 0) {
+//            if (projects.get(choice).getTotalCost() > projects.get(choice).getTargetSale()) {
+//                targetInfo = labelMaker("You are over budget by "
+//                        + formatNumbers(projects.get(choice).getTotalCost() - projects.get(choice).getTargetSale())
+//                        + " !!!!", 28, "TOP");
+//            } else {
+//                targetInfo = labelMaker("You are on track!! Your budget still allows for another "
+//                        + formatNumbers(projects.get(choice).getTargetSale()) + " !!!", 28, "TOP");
+//            }
+//        } else {
+//            targetInfo = labelMaker("You must set a target before you can view your budget information!!",
+//                    28, "TOP");
+//        }
+//        add(targetInfo);
+//        setVisible(true);
+//    }
 
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
@@ -343,13 +416,16 @@ public class VisualApp extends JFrame {
 
     // MODIFIES: this
     // EFFECTS: Displays all existing projects
-    private void displayProjects() {
+    private void displayProjects(String text) {
+        clearScreen();
+        JLabel select = labelMaker(text, 28, "TOP");
+        defaultPanel.add(select);
         if (projects.size() != 0) {
+            initDisplayLists();
             ButtonGroup g1 = new ButtonGroup();
-            JPanel radioPanel = new JPanel();
-            for (int i = 0; i < projects.size(); i++) {
+            for (Project project : projects) {
                 JRadioButton j1 = new JRadioButton();
-                j1.setText(projects.get(i).getAddress());
+                j1.setText(project.getAddress());
                 j1.setForeground(GOLD);
                 j1.setFont(new Font("Serif", Font.PLAIN, 18));
                 j1.setBackground(Color.BLACK);
@@ -358,11 +434,19 @@ public class VisualApp extends JFrame {
                 projectButtonList.add(j1);
             }
             radioPanel.setBackground(Color.black);
-            add(radioPanel);
+            defaultPanel.add(radioPanel);
+            add(defaultPanel);
             setVisible(true);
         } else {
             handleEmptyProjects("You Have No Projects To Display! Please Go Home And Create Some!");
         }
+    }
+
+    // EFFECTS: Clears lists/groups related to display projects
+    private void initDisplayLists() {
+        radioPanel.removeAll();
+        projectButtonList.clear();
+
     }
 
     // MODIFIES: this

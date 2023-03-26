@@ -28,7 +28,7 @@ public class CreateEntryButton extends Button {
         // EFFECTS: Calls method to execute option
         @Override
         public void actionPerformed(ActionEvent e) {
-            editor.loadScreen();
+            editor.createEntryMenu();
         }
     }
 }
