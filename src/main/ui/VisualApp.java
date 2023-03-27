@@ -1,5 +1,6 @@
 package ui;
 
+import model.Entry;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
@@ -192,8 +193,40 @@ public class VisualApp extends JFrame {
             createEntry(choice);
         } else if (version == "SUMMARY") {
             displayProjectsStats(choice);
+        } else if (version == "VIEW") {
+            displayEntries(choice);
         }
         new HomeButton(this,defaultPanel);
+        add(defaultPanel);
+        setVisible(true);
+    }
+
+    // EFFECTS: Displays All Entries For Chosen Project
+    private void displayEntries(int choice) {
+        clearScreen();
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        add(labelMaker("Below Are All The Transactions For " + projects.get(choice).getAddress(),
+                28, "TOP"));
+        JLabel[] entries = new JLabel[projects.get(choice).getNumberOfTransactions()];
+        for (int i = 0; i < projects.get(choice).getNumberOfTransactions(); i++) {
+            entries[i] = (labelMaker(projects.get(choice).getTransaction(i).getId() + ". Payee: "
+                            + projects.get(choice).getTransaction(i).getPayee() + " Amount "
+                    + formatNumbers(projects.get(choice).getTransaction(i).getAmount())
+                            + " Purchase Type: " + projects.get(choice).getTransaction(i).getPaymentType(),
+                    20, "TOP"));
+            add(entries[i]);
+        }
+
+        pack();
+        setVisible(true);
+    }
+
+    // EFFECTS: Displays the menu to choose which project to view transactions for
+    public void viewTransactionsMenu() {
+        displayProjects("Please Select Which Project You Would Like To View Transactions For");
+        if (projects.size() != 0) {
+            new SelectButton(this, defaultPanel, "VIEW");
+        }
         add(defaultPanel);
         setVisible(true);
     }

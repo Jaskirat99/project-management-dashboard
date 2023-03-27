@@ -5,15 +5,26 @@
         "target": 900
     },
     {
-        "entries": [{
-            "payee": "Jas",
-            "amount": 900,
-            "project": "456 Street",
-            "ID": 0,
-            "taxPaid": false,
-            "taxType": "",
-            "paymentType": "Visa"
-        }],
+        "entries": [
+            {
+                "payee": "Jas",
+                "amount": 900,
+                "project": "456 Street",
+                "ID": 0,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "Visa"
+            },
+            {
+                "payee": "jas",
+                "amount": 56789,
+                "project": "456 Street",
+                "ID": 1,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "cash"
+            }
+        ],
         "address": "456 Street",
         "target": 90
     },
