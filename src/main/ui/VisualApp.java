@@ -1,6 +1,5 @@
 package ui;
 
-import model.Entry;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
@@ -14,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import static model.Utilities.*;
 
 // Represents a GUI app
@@ -32,7 +33,9 @@ public class VisualApp extends JFrame {
     private List<JRadioButton> projectButtonList = new ArrayList();
     private JTextField enterAddress = new JTextField("Replace This With String");
     private JTextField enterTarget = new JTextField("Replace This With Number");
-    JPanel radioPanel = new JPanel();
+    private JMenu filter;
+    private JPanel radioPanel = new JPanel();
+    private JMenuBar mb = new JMenuBar();
 
 
     List<Project> projects = new ArrayList<>();
@@ -72,7 +75,6 @@ public class VisualApp extends JFrame {
     // MODIFIES: this
     // EFFECTS: Draws the top menu bar menu
     private void initializeTopBar() {
-        JMenuBar mb = new JMenuBar();
         JMenu fileMenu = new JMenu("File Options");
         JMenu projectMenu = new JMenu("Project Options");
         JMenu entryMenu = new JMenu("Entry Options");
@@ -216,7 +218,38 @@ public class VisualApp extends JFrame {
                     20, "TOP"));
             add(entries[i]);
         }
+        filter = new JMenu("Filter Entries");
+        new CashFilterButton(this, filter, "CASH", choice);
+        new ChequeFilterButton(this, filter, "CHEQUE", choice);
+        new VisaFilterButton(this, filter, "VISA", choice);
 
+        mb.add(filter);
+        pack();
+        setVisible(true);
+    }
+
+    public void filteredViewTransactions(String filter, int choice) {
+        clearScreen();
+        setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        add(labelMaker("Below Are All The " + filter + " Transactions For " + projects.get(choice).getAddress(),
+                28, "TOP"));
+        JLabel[] entries = new JLabel[projects.get(choice).getNumberOfTransactions()];
+        int counter = 1;
+        for (int i = 0; i < projects.get(choice).getNumberOfTransactions(); i++) {
+            if (filter.equals(projects.get(choice).getTransaction(i).getPaymentType().toUpperCase())) {
+                entries[i] = (labelMaker(counter + ". Payee: " + projects.get(choice).getTransaction(i).getPayee()
+                                + " Amount " + formatNumbers(projects.get(choice).getTransaction(i).getAmount())
+                                + " Purchase Type: " + projects.get(choice).getTransaction(i).getPaymentType(),
+                        20, "TOP"));
+                counter++;
+                add(entries[i]);
+            }
+        }
+        if (counter == 1) {
+            add(labelMaker("No Entries Match The Filter!", 26, "TOP"));
+        }
+        new HomeButton(this,defaultPanel);
+        add(defaultPanel);
         pack();
         setVisible(true);
     }
@@ -497,6 +530,11 @@ public class VisualApp extends JFrame {
         this.repaint();
         getContentPane().setBackground(Color.BLACK);
         defaultPanel.setBackground(Color.BLACK);
+        if (filter != null) {
+            mb.remove(filter);
+        }
+        mb.revalidate();
+        mb.repaint();
 
     }
 
