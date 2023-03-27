@@ -41,10 +41,11 @@ do so
    "Add A Transaction"
 - You can generate the first required action related to adding Entries to a Project by clicking the top right menu option 
 labelled "Entry Options" and then clicking
-  "Ammend A Transaction"
+  "Add A Transaction"
 - You can generate the second required action related to adding Entries to a Project by clicking the top right menu option
 labelled "Entry Options" and then clicking "View Transactions." Here you can view all entries for a particular Project 
-and optionally filter (By clicking the top menu option labelled "Filter") for a subset of Entries
+and optionally filter (By clicking the top menu option labelled "Filter") for a subset of Entries. You can also view
+a summary of the entries through "Project Options" and then "View Summaries"
 - You can locate my visual component on the main screen. Any time you navigate "home", a picture is displayed
 - You can save the state of my application by clicking the top menu option labelled "File Options" and then clicking 
 "Save Data"

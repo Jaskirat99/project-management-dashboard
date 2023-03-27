@@ -1,5 +1,6 @@
 package ui;
 
+import model.Entry;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
@@ -13,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static model.Utilities.*;
 
@@ -86,7 +86,6 @@ public class VisualApp extends JFrame {
         new ProjectSummaryButton(this, projectMenu);
         new CreateEntryButton(this, entryMenu);
         new ViewEntriesButton(this, entryMenu);
-        new AmmendEntryButton(this, entryMenu);
 
         mb.add(fileMenu);
         mb.add(projectMenu);
@@ -202,6 +201,7 @@ public class VisualApp extends JFrame {
         add(defaultPanel);
         setVisible(true);
     }
+
 
     // EFFECTS: Displays All Entries For Chosen Project
     private void displayEntries(int choice) {
@@ -373,6 +373,7 @@ public class VisualApp extends JFrame {
         setVisible(true);
     }
 
+
     // MODIFIES: this
     // EFFECTS: Draws the screen that displays the saving options
     public void saveScreen() {
@@ -412,7 +413,7 @@ public class VisualApp extends JFrame {
                 System.out.println("Unable to write to file: " + JSON_DESTINATION);
             }
         } else {
-            handleEmptyProjects("You Have No Projects To Save! Please Go Home And Create Some");
+            handleEmpty("You Have No Projects To Save! Please Go Home And Create Some");
         }
 
     }
@@ -448,7 +449,7 @@ public class VisualApp extends JFrame {
                 new HomeButton(this,defaultPanel);
                 add(defaultPanel);
             } else {
-                handleEmptyProjects("You Have No Projects To Load! Please Go Home And Create Some");
+                handleEmpty("You Have No Projects To Load! Please Go Home And Create Some");
             }
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_DESTINATION);
@@ -500,7 +501,7 @@ public class VisualApp extends JFrame {
             add(defaultPanel);
             setVisible(true);
         } else {
-            handleEmptyProjects("You Have No Projects To Display! Please Go Home And Create Some!");
+            handleEmpty("You Have No Projects To Display! Please Go Home And Create Some!");
         }
     }
 
@@ -512,8 +513,8 @@ public class VisualApp extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: Informs user that they have no projects to display
-    private void handleEmptyProjects(String input) {
+    // EFFECTS: Informs user that what they are requesting is empty
+    private void handleEmpty(String input) {
         clearScreen();
         JLabel error = labelMaker(input, 28, "TOP");
         defaultPanel.add(error);
