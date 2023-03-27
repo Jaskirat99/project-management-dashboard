@@ -1,6 +1,14 @@
 [
     {
-        "entries": [],
+        "entries": [{
+            "payee": "Jas",
+            "amount": 7890,
+            "project": "123",
+            "ID": 0,
+            "taxPaid": false,
+            "taxType": "",
+            "paymentType": "cash"
+        }],
         "address": "123",
         "target": 900
     },

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 // Represents a custom button specifically for submit Entry option
 public class SubmitEntryButton extends Button {
@@ -49,7 +50,11 @@ public class SubmitEntryButton extends Button {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            editor.submitEntry(enterPayee,enterAmount, enterPurchaseType, choice);
+            try {
+                editor.submitEntry(enterPayee,enterAmount, enterPurchaseType, choice);
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

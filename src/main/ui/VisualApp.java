@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static model.Utilities.*;
 
@@ -207,29 +208,31 @@ public class VisualApp extends JFrame {
     private void displayEntries(int choice) {
         clearScreen();
         setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
-        add(labelMaker("Below Are All The Transactions For " + projects.get(choice).getAddress(),
-                28, "TOP"));
-        JLabel[] entries = new JLabel[projects.get(choice).getNumberOfTransactions()];
-        for (int i = 0; i < projects.get(choice).getNumberOfTransactions(); i++) {
-            entries[i] = (labelMaker(projects.get(choice).getTransaction(i).getId() + ". Payee: "
-                            + projects.get(choice).getTransaction(i).getPayee() + " Amount "
-                    + formatNumbers(projects.get(choice).getTransaction(i).getAmount())
-                            + " Purchase Type: " + projects.get(choice).getTransaction(i).getPaymentType(),
-                    20, "TOP"));
-            add(entries[i]);
+        if (projects.get(choice).getNumberOfTransactions() != 0) {
+            add(labelMaker("Below Are All The Transactions For " + projects.get(choice).getAddress(),
+                    28, "TOP"));
+            for (int i = 0; i < projects.get(choice).getNumberOfTransactions(); i++) {
+                add(labelMaker(i + 1 + ". Payee: "
+                                + projects.get(choice).getTransaction(i).getPayee() + " Amount "
+                                + formatNumbers(projects.get(choice).getTransaction(i).getAmount())
+                                + " Purchase Type: " + projects.get(choice).getTransaction(i).getPaymentType(),
+                        20, "TOP"));
+            }
+            filter = new JMenu("Filter Entries");
+            new CashFilterButton(this, filter, "CASH", choice);
+            new ChequeFilterButton(this, filter, "CHEQUE", choice);
+            new VisaFilterButton(this, filter, "VISA", choice);
+            mb.add(filter);
+        } else {
+            add(labelMaker("You Do Not Have Any Entries To View For " + projects.get(choice).getAddress()
+                    + ". Please Go Home And Create Some!", 28, "TOP"));
         }
-        filter = new JMenu("Filter Entries");
-        new CashFilterButton(this, filter, "CASH", choice);
-        new ChequeFilterButton(this, filter, "CHEQUE", choice);
-        new VisaFilterButton(this, filter, "VISA", choice);
-
-        mb.add(filter);
         pack();
         setVisible(true);
     }
 
     public void filteredViewTransactions(String filter, int choice) {
-        clearScreen();
+        clearScreenFilterVersion();
         setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
         add(labelMaker("Below Are All The " + filter + " Transactions For " + projects.get(choice).getAddress(),
                 28, "TOP"));
@@ -293,16 +296,46 @@ public class VisualApp extends JFrame {
     }
 
     // EFFECTS Helper method for createEntry(). Constructs new entry when submitEntry Button clicked
-    public void submitEntry(JTextField enterPayee, JTextField enterAmount, JTextField enterPurchaseType, int choice) {
+    public void submitEntry(JTextField enterPayee, JTextField enterAmount, JTextField enterPurchaseType, int choice)
+            throws FileNotFoundException {
         clearScreen();
-        projects.get(choice).createEntry(enterPayee.getText(),enterPurchaseType.getText(),false, "",
-                Double.parseDouble(enterAmount.getText()));
-        String str = "Added An Entry For " + enterPayee.getText() + " With Amount "
-                + formatNumbers(Double.parseDouble(enterAmount.getText())) + " Paid Via " + enterPurchaseType.getText();
-        add(labelMaker(str,24, "TOP"));
+        String correctedPurchaseType = checkInvalidPurchaseType(enterPurchaseType.getText());
+        if (correctedPurchaseType != "ERROR") {
+            projects.get(choice).createEntry(enterPayee.getText(), correctedPurchaseType, false, "",
+                    Double.parseDouble(enterAmount.getText()));
+            String str = "Added An Entry For " + enterPayee.getText() + " With Amount "
+                    + formatNumbers(Double.parseDouble(enterAmount.getText())) + " Paid Via "
+                    + correctedPurchaseType;
+            add(labelMaker(str, 24, "TOP"));
+        }
         new HomeButton(this,defaultPanel);
         add(defaultPanel);
         setVisible(true);
+    }
+
+    // EFFECTS: Check's if input matches either "cash", "visa", "cheque" or a common misspelling of those words
+    private String checkInvalidPurchaseType(String purchaseType) throws FileNotFoundException {
+
+        if (findCloseEnoughCorrectInput(cash, purchaseType.toLowerCase())) {
+            JOptionPane.showMessageDialog(this,"Seems Like You Made A Small Mistake!"
+                    + " I Have Corrected Your Purchase Type To 'Cash'");
+            return "cash";
+        } else if (findCloseEnoughCorrectInput(cheque, purchaseType.toLowerCase())) {
+            JOptionPane.showMessageDialog(this,"Seems Like You Made A Small Mistake!"
+                    + " I Have Corrected Your Purchase Type To 'Cheque'");
+            return "cheque";
+        } else if (findCloseEnoughCorrectInput(visa, purchaseType.toLowerCase())) {
+            JOptionPane.showMessageDialog(this,"Seems Like You Made A Small Mistake!"
+                    + " I Have Corrected Your Purchase Type To 'Visa'");
+            return "visa";
+        } else if (!(Objects.equals("cash", purchaseType.toLowerCase()))
+                && !(Objects.equals("cheque", purchaseType.toLowerCase()))
+                && !(Objects.equals("visa", purchaseType.toLowerCase()))) {
+            JOptionPane.showMessageDialog(this,"Seems Like You Made A Mistake!"
+                    + " That Was Not A Valid Input For Purchase Type!");
+            return "ERROR";
+        }
+        return purchaseType;
     }
 
     // EFFECTS: Helper method for createEntry(). Formats the Inputs for entry fields
@@ -524,7 +557,7 @@ public class VisualApp extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: Clears screen of all components and sets background to be plain black
+    // EFFECTS: Clears screen of all components and sets background to be plain black and clears filter menu if added
     private void clearScreen() {
         this.getContentPane().removeAll();
         defaultPanel.removeAll();
@@ -537,6 +570,16 @@ public class VisualApp extends JFrame {
         mb.revalidate();
         mb.repaint();
 
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Clears screen of all components EXCEPT filter menu and sets background to be plain black
+    private void clearScreenFilterVersion() {
+        this.getContentPane().removeAll();
+        defaultPanel.removeAll();
+        this.repaint();
+        getContentPane().setBackground(Color.BLACK);
+        defaultPanel.setBackground(Color.BLACK);
     }
 
     // EFFECTS: Public accessor method for home button
