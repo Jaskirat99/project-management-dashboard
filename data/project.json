@@ -40,5 +40,38 @@
         "entries": [],
         "address": "789 Rd",
         "target": 56789
+    },
+    {
+        "entries": [
+            {
+                "payee": "Diljit",
+                "amount": 2.4,
+                "project": "Coachella",
+                "ID": 0,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "cash"
+            },
+            {
+                "payee": "Karan",
+                "amount": 4.8,
+                "project": "Coachella",
+                "ID": 1,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "Visa"
+            },
+            {
+                "payee": "Drake",
+                "amount": 500,
+                "project": "Coachella",
+                "ID": 2,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "Cheque"
+            }
+        ],
+        "address": "Coachella",
+        "target": 100
     }
 ]
