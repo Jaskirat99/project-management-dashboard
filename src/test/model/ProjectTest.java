@@ -74,9 +74,9 @@ public class ProjectTest {
     public void formatTransactionsTest(){
 
 
-       assertEquals("Payee: payee1 Date: 08/02/2023 Amount: $100.00 Payment Type: CASH Tax Included: true " +
+       assertEquals("Payee: payee1 Amount: $100.00 Payment Type: CASH Tax Included: true " +
                "Taxes Applied: GST Project: 123 Street", p1.formatTransactions().get(0));
-       assertEquals("Payee: payee4 Date: 08/02/2023 Amount: $400.00 Payment Type: CASH Tax Included: false " +
+       assertEquals("Payee: payee4 Amount: $400.00 Payment Type: CASH Tax Included: false " +
                "Taxes Applied: GST Project: 456 Street", p2.formatTransactions().get(1));
    }
 

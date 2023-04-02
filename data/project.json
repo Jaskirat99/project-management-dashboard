@@ -31,13 +31,30 @@
                 "taxPaid": false,
                 "taxType": "",
                 "paymentType": "cash"
+            },
+            {
+                "payee": "Jassss",
+                "amount": 4678,
+                "project": "456 Street",
+                "ID": 2,
+                "taxPaid": false,
+                "taxType": "",
+                "paymentType": "Visa"
             }
         ],
         "address": "456 Street",
         "target": 90
     },
     {
-        "entries": [],
+        "entries": [{
+            "payee": "Jas",
+            "amount": 986,
+            "project": "789 Rd",
+            "ID": 0,
+            "taxPaid": false,
+            "taxType": "",
+            "paymentType": "Cash"
+        }],
         "address": "789 Rd",
         "target": 56789
     },
@@ -73,5 +90,10 @@
         ],
         "address": "Coachella",
         "target": 100
+    },
+    {
+        "entries": [],
+        "address": "45678 Street",
+        "target": 56789
     }
 ]

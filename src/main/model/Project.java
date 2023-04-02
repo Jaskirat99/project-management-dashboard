@@ -24,6 +24,7 @@ public class Project {
     public Project(String address) {
 
         this.address = address;
+        EventLog.getInstance().logEvent(new Event("Project: " + getAddress() + " Created."));
     }
 
     // EFFECTS: Adds a new entry to transactions list with given args, sets that entry's ID to next available ID,
@@ -35,6 +36,7 @@ public class Project {
         transactions.get(transactionID).setID(transactionID);
         transactionID++;
         calculateTotalCost();
+        EventLog.getInstance().logEvent(new Event("Entry Created For: " + getAddress()));
     }
 
     // MODIFIES: this
@@ -45,7 +47,7 @@ public class Project {
             sum += transaction.getAmount();
         }
         this.totalCost = sum;
-
+        EventLog.getInstance().logEvent(new Event("Total Cost Calculated"));
     }
 
     // EFFECTS: Computes total tax for all transactions in project
@@ -81,7 +83,9 @@ public class Project {
                 }
             }
         }
+        EventLog.getInstance().logEvent(new Event("Tax Breakdown Calculated."));
         return amount;
+
     }
 
     // REQUIRES: num is 1 or 2 or 3
@@ -118,7 +122,6 @@ public class Project {
 
         for (Entry transaction : transactions) {
             String formattedEntry = "Payee: " + transaction.getPayee()
-                    + " Date: " + transaction.getDate()
                     + " Amount: " + formatNumbers(transaction.getAmount())
                     + " Payment Type: " + transaction.getPaymentType().toUpperCase()
                     + " Tax Included: " + transaction.getTaxPaid()

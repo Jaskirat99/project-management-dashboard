@@ -16,6 +16,7 @@ public class Utilities {
     // EFFECTS: Takes a double and formats that into a presentable string
     public static String formatNumbers(double raw) {
         String formattedStr = "$" + String.format("%,.2f",raw);
+        EventLog.getInstance().logEvent(new Event("Number Formatted For Display!."));
 
         return formattedStr;
     }

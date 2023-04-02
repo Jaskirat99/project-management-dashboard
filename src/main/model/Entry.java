@@ -6,9 +6,7 @@ import org.json.JSONObject;
 // Represents an individual transaction storing ID, project, payee, amount, date, payment type, tax paid
 public class Entry {
 
-    Date dateStarter = new Date();
     private String payee;
-    private String date;
     private String paymentType;
     private Boolean taxPaid;
     private String taxType;
@@ -21,17 +19,19 @@ public class Entry {
     public Entry(String payee, String paymentType, Boolean taxPaid, String taxType, double amount,
                  String project) {
         this.payee = payee;
-        this.date = dateStarter.getFormattedDate();
         this.paymentType = paymentType;
         this.taxPaid = taxPaid;
         this.taxType = taxType;
         this.amount = amount;
         this.project = project;
+        EventLog.getInstance().logEvent(new Event("Entry Constructed."));
+
     }
 
     // REQUIRES: if tax paid == true, tax type can not be none
     // EFFECTS: Returns amount of tax that was paid on amount
     public double calculateTax() {
+        EventLog.getInstance().logEvent(new Event("Tax Calculated For Entry."));
         if (taxPaid) {
             if (taxType.equals("GST")) {
                 return ((amount - (amount / 1.05)));
@@ -52,6 +52,7 @@ public class Entry {
                     return (0);
             }
         }
+
     }
 
     // EFFECTS: converts project information to JSON object
@@ -99,9 +100,6 @@ public class Entry {
         return payee;
     }
 
-    public String getDate() {
-        return date;
-    }
 
     public String getPaymentType() {
         return paymentType;

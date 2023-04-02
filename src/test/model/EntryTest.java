@@ -36,9 +36,6 @@ class EntryTest {
     public void entryTest() {
     assertEquals("payee1", c1.getPayee());
     assertEquals("payee2", c2.getPayee());
-    assertEquals("08/02/2023", c3.getDate());
-    assertEquals("08/02/2023", c4.getDate());
-    assertEquals("08/02/2023", c5.getDate());
     assertEquals("cash", c4.getPaymentType());
     assertEquals("visa", c5.getPaymentType());
     assertEquals("cheque", c3.getPaymentType());

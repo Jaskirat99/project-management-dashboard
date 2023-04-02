@@ -1,6 +1,8 @@
 package ui;
 
 import model.Entry;
+import model.Event;
+import model.EventLog;
 import model.Project;
 import persistence.ReadJson;
 import persistence.WriteJson;
@@ -69,8 +71,21 @@ public class VisualApp extends JFrame {
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        //add(layeredPane, BorderLayout.CENTER);
+        addWindowListener();
         setVisible(true);
+    }
+
+    // EFFECTS: Adds a listener so when application is closed, events are printed to console
+    private void addWindowListener() {
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                for (Event e: EventLog.getInstance()) {
+                    System.out.println(e.toString() + "\n");
+                }
+                System.exit(0);
+            }
+        });
     }
 
     // MODIFIES: this

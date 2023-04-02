@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import model.Event;
+import model.EventLog;
 import model.Project;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +34,7 @@ public class ReadJson {
         for (int i = 0; i < jsonArray.length(); i++) {
             projects.add(parseProject(jsonArray.getJSONObject(i)));
         }
-
+        EventLog.getInstance().logEvent(new Event("Reading Data From JSON!"));
         return projects;
     }
 
