@@ -38,7 +38,6 @@ public class WriteJson {
             jsonArray.put(projects.get(i).toJson());
         }
         saveToFile(jsonArray.toString(TAB));
-        EventLog.getInstance().logEvent(new Event("Writing Data To JSON!"));
 
     }
 

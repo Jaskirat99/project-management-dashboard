@@ -33,7 +33,7 @@ public class Utilities {
             result = Objects.equals(input.nextLine(),searchString);
         }
 
-
+        EventLog.getInstance().logEvent(new Event("Checking For Errors!"));
         return result;
     }
 }

@@ -131,6 +131,7 @@ public class Project {
             formattedTransactions.add(formattedEntry);
 
         }
+        EventLog.getInstance().logEvent(new Event("Formatting Transactions!"));
         return formattedTransactions;
     }
 

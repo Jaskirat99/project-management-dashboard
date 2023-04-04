@@ -34,7 +34,6 @@ public class ReadJson {
         for (int i = 0; i < jsonArray.length(); i++) {
             projects.add(parseProject(jsonArray.getJSONObject(i)));
         }
-        EventLog.getInstance().logEvent(new Event("Reading Data From JSON!"));
         return projects;
     }
 

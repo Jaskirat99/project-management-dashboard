@@ -53,114 +53,96 @@ a summary of the entries through "Project Options" and then "View Summaries"
   "Load Data"
 
 # Phase 4: Task 2
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Project: 123 Created.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: 123
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Project: 456 Street Created.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: 456 Street
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: 456 Street
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: 456 Street
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Project: 789 Rd Created.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: 789 Rd
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Project: Coachella Created.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: Coachella
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: Coachella
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Constructed.
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Total Cost Calculated
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Entry Created For: Coachella
 
-Sat Apr 01 20:05:41 PDT 2023
+Mon Apr 03 18:14:20 PDT 2023
 Project: 45678 Street Created.
 
-Sat Apr 01 20:05:41 PDT 2023
-Reading Data From JSON!
+Mon Apr 03 18:16:09 PDT 2023
+Project: 686 Street Created.
 
-Sat Apr 01 20:05:49 PDT 2023
+Mon Apr 03 18:16:09 PDT 2023
 Number Formatted For Display!.
 
-Sat Apr 01 20:05:49 PDT 2023
-Total Cost Calculated
-
-Sat Apr 01 20:05:49 PDT 2023
-Number Formatted For Display!.
-
-Sat Apr 01 20:05:49 PDT 2023
-Number Formatted For Display!.
-
-
-Sat Apr 01 20:05:49 PDT 2023
-Total Cost Calculated
-
-Sat Apr 01 20:05:49 PDT 2023
-Number Formatted For Display!.
-
-Sat Apr 01 20:05:58 PDT 2023
-Writing Data To JSON!
