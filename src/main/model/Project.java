@@ -47,7 +47,7 @@ public class Project {
             sum += transaction.getAmount();
         }
         this.totalCost = sum;
-        EventLog.getInstance().logEvent(new Event("Total Cost Calculated"));
+        EventLog.getInstance().logEvent(new Event("Total Cost Calculated For: " + getAddress()));
     }
 
     // EFFECTS: Computes total tax for all transactions in project

@@ -24,7 +24,6 @@ public class Entry {
         this.taxType = taxType;
         this.amount = amount;
         this.project = project;
-        EventLog.getInstance().logEvent(new Event("Entry Constructed."));
 
     }
 
